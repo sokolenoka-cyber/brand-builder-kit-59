@@ -839,25 +839,58 @@ function CTASection({
               </div>
             </div>
             <form
-              key={selected ?? "empty"}
               onSubmit={(e) => {
                 e.preventDefault();
+                const payload = {
+                  name,
+                  email,
+                  msg,
+                  trigger_key: trigger?.key ?? "",
+                  trigger_label: trigger?.ready ?? "",
+                  trigger_questions: trigger?.questions ?? [],
+                };
                 setLoading(true);
+                // eslint-disable-next-line no-console
+                console.log("[CTA submit]", payload);
                 setTimeout(() => {
                   setLoading(false);
-                  toast.success("Заявка отправлена ✨ Свяжусь с тобой в течение дня");
-                  (e.target as HTMLFormElement).reset();
+                  toast.success(
+                    trigger
+                      ? `Заявка отправлена ✨ Разберём «${trigger.ready}» на встрече`
+                      : "Заявка отправлена ✨ Свяжусь с тобой в течение дня",
+                  );
+                  setName("");
+                  setEmail("");
+                  setMsg("");
+                  lastTriggerRef.current = null;
+                  onClear();
                 }, 700);
               }}
               className="space-y-3"
             >
-              <input type="hidden" name="trigger_key" value={trigger?.key ?? ""} />
-              <input type="hidden" name="trigger_label" value={trigger?.ready ?? ""} />
-              <Input required name="name" placeholder="Имя" className="h-12 rounded-xl bg-background" />
-              <Input required type="email" name="email" placeholder="Email или телеграм" className="h-12 rounded-xl bg-background" />
+              <input type="hidden" name="trigger_key" value={trigger?.key ?? ""} readOnly />
+              <input type="hidden" name="trigger_label" value={trigger?.ready ?? ""} readOnly />
+              <Input
+                required
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Имя"
+                className="h-12 rounded-xl bg-background"
+              />
+              <Input
+                required
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email или телеграм"
+                className="h-12 rounded-xl bg-background"
+              />
               <Textarea
                 name="msg"
-                defaultValue={prefill}
+                value={msg}
+                onChange={(e) => setMsg(e.target.value)}
                 placeholder={
                   trigger
                     ? "Ответь коротко на 3 вопроса выше — даже одной строкой."
@@ -865,6 +898,15 @@ function CTASection({
                 }
                 className="rounded-xl bg-background min-h-44"
               />
+              {trigger && (
+                <button
+                  type="button"
+                  onClick={() => setMsg(buildPrefill(trigger))}
+                  className="text-xs text-violet-deep hover:underline underline-offset-4"
+                >
+                  ↻ Вернуть авто-вопросы по триггеру
+                </button>
+              )}
               <Button
                 type="submit"
                 disabled={loading}
