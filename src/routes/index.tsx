@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Sparkles, Brain, Wand2, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail, Target, Lightbulb, Calendar, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
