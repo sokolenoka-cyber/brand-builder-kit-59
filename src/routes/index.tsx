@@ -243,6 +243,63 @@ function Problem() {
   );
 }
 
+function Triggers() {
+  const pairs = [
+    { ready: "Готова проявляться", trigger: "а вдруг скажут «куда ты лезешь, ты же ещё не дотянула»" },
+    { ready: "Готова заявить о себе громко", trigger: "и тут же — «будут осуждать, потеряю своих»" },
+    { ready: "Готова брать высокий чек", trigger: "но внутри — «я недостаточно, у других круче»" },
+    { ready: "Готова запустить свой проект", trigger: "а в голове — «сначала ещё один курс, ещё один диплом»" },
+    { ready: "Готова показать настоящую себя", trigger: "и сразу — «а что подумает мама / муж / подписчики»" },
+    { ready: "Готова к большим деньгам", trigger: "но тело сжимается: «с деньгами приходит ответственность, я не вывезу»" },
+    { ready: "Готова быть видимой", trigger: "и тут — «лучше ещё подготовлюсь, дошлифую, потом»" },
+    { ready: "Готова к своей миссии", trigger: "а внутри страх: «а вдруг получится — и придётся менять всю жизнь»" },
+  ];
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-24">
+      <div className="max-w-3xl">
+        <span className="text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold">Метод: найди свой стоп-кран</span>
+        <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold leading-tight">
+          «Готова… <span className="text-gradient">НО</span> — и тут триггер, который тормозит»
+        </h2>
+        <p className="mt-5 text-lg text-foreground/70 leading-relaxed">
+          Сила не там, где «надо больше пахать». Сила там, где ты замечаешь точное место,
+          в котором себя останавливаешь. Узнай свою фразу — и мы её разберём.
+        </p>
+      </div>
+      <div className="mt-12 grid md:grid-cols-2 gap-4">
+        {pairs.map((p) => (
+          <div
+            key={p.ready}
+            className="group rounded-2xl border border-border/60 bg-card p-6 hover:border-rose/60 hover:shadow-lg transition"
+          >
+            <div className="flex items-start gap-3">
+              <Check className="h-5 w-5 mt-1 text-violet-deep shrink-0" />
+              <p className="font-display text-lg font-semibold text-foreground">{p.ready}</p>
+            </div>
+            <div className="mt-3 ml-8 flex items-start gap-2">
+              <span className="text-rose font-bold text-sm tracking-widest">НО</span>
+              <p className="text-foreground/75 leading-relaxed italic">{p.trigger}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-10 rounded-3xl bg-aurora p-8 sm:p-10 text-center">
+        <p className="font-display text-xl sm:text-2xl font-semibold max-w-3xl mx-auto leading-snug">
+          То, что тебя останавливает — и есть точка, в которой рождается прорыв.
+          На разборе мы достаём именно <span className="text-gradient">твоё «НО»</span> и переписываем его.
+        </p>
+        <a
+          href="#cta"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 font-semibold hover:opacity-90 transition"
+        >
+          Найти свой триггер <ArrowRight className="h-4 w-4" />
+        </a>
+      </div>
+    </section>
+  );
+}
+
+
 function Method() {
   const pillars = [
     {
