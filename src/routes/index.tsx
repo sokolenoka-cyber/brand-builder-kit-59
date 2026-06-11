@@ -288,43 +288,137 @@ function Method() {
 }
 
 function Offer() {
-  const includes = [
-    "Глубинное интервью + распаковка миссии",
-    "AI-сборка позиционирования, оффера и tone of voice",
-    "Готовый лендинг / визуальная упаковка",
-    "2 сессии работы с блоками проявления",
-    "Скрипты для соцсетей и продаж",
-    "Поддержка 30 дней после программы",
+  const forWho = [
+    "У вас есть идея проекта, курса, практики, блога или бизнеса, но вы не знаете, с чего начать.",
+    "Вы давно откладываете запуск и постоянно готовитесь.",
+    "Вам сложно понять свою уникальность и ценность.",
+    "Есть страх проявляться и заявлять о себе.",
+    "Вы хотите использовать современные возможности ИИ для ускорения работы и роста.",
+    "Вы чувствуете, что способны на большее, но пока не реализуете свой потенциал.",
   ];
+
+  const results = [
+    "Четкое понимание своей идеи и направления развития.",
+    "Упакованная концепция проекта или экспертности.",
+    "Позиционирование и уникальное сообщение для аудитории.",
+    "План действий на ближайшие 90 дней.",
+    "Контент-стратегия и идеи для проявления.",
+    "Подобранные ИИ-инструменты под ваш проект.",
+    "Снятие основных внутренних ограничений, мешающих действовать.",
+    "Первые реальные шаги по запуску проекта.",
+  ];
+
+  const levels = [
+    { icon: Brain, title: "Мышление и внутренние ограничения", desc: "Снимаем блоки проявления, страх денег, синдром самозванца — мягко и глубоко." },
+    { icon: Wand2, title: "Упаковка идеи и позиционирование", desc: "Через нейросети собираем миссию, оффер, голос и визуал — за дни, а не месяцы." },
+    { icon: Rocket, title: "Реализация через современные инструменты и ИИ", desc: "Готовая упаковка + внутреннее «да» = ты выходишь и наконец-то проявляешься." },
+  ];
+
   return (
     <section id="offer" className="mx-auto max-w-7xl px-5 py-24">
-      <div className="grid lg:grid-cols-5 gap-10 items-start">
-        <div className="lg:col-span-2">
-          <span className="text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold">Программа</span>
-          <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold leading-tight">
-            «Миссия на миллион» — за 21 день
-          </h2>
-          <p className="mt-5 text-muted-foreground leading-relaxed">
-            Личное сопровождение, где мы одновременно собираем твою AI-упаковку и снимаем
-            внутренние тормоза. На выходе — не папка файлов, а ощущение «я готова и хочу проявляться».
-          </p>
-          <Button asChild size="lg" className="mt-8 rounded-full bg-violet-deep hover:bg-violet-deep/90 text-white h-12 px-7">
-            <a href="#cta">Хочу разбор <ArrowRight className="ml-2 h-4 w-4" /></a>
-          </Button>
-        </div>
-        <div className="lg:col-span-3 rounded-3xl bg-gradient-to-br from-violet-deep to-rose p-[1px]">
-          <div className="rounded-3xl bg-card p-8 sm:p-10">
-            <h3 className="font-display text-2xl font-bold">Что входит</h3>
+      <div className="max-w-3xl mx-auto text-center">
+        <span className="text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold">Программа</span>
+        <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold leading-tight">
+          «От идеи до реализации»
+        </h2>
+        <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
+          Для экспертов, специалистов, консультантов, авторов проектов и творческих людей, которые чувствуют в себе потенциал для большего, но не могут превратить свою идею в реальный проект.
+        </p>
+        <p className="mt-3 text-muted-foreground leading-relaxed">
+          За 6 недель мы пройдем путь от хаоса в голове до понятной концепции, упаковки и первых шагов реализации.
+        </p>
+      </div>
+
+      <div className="mt-16 grid lg:grid-cols-2 gap-10">
+        <div className="rounded-3xl bg-gradient-to-br from-violet-deep to-rose p-[1px]">
+          <div className="rounded-3xl bg-card p-8 sm:p-10 h-full">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-lavender/40 text-violet-deep mb-5">
+              <Users className="h-5 w-5" />
+            </div>
+            <h3 className="font-display text-2xl font-bold">Для кого программа</h3>
             <ul className="mt-6 space-y-4">
-              {includes.map((i) => (
-                <li key={i} className="flex gap-3">
-                  <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-lavender/40 text-violet-deep">
-                    <Check className="h-3.5 w-3.5" />
+              {forWho.map((item) => (
+                <li key={item} className="flex gap-3">
+                  <span className="mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose/20 text-rose">
+                    <span className="text-xs">•</span>
                   </span>
-                  <span className="text-foreground/90">{i}</span>
+                  <span className="text-foreground/90 leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+
+        <div className="rounded-3xl bg-gradient-to-br from-rose to-violet-deep p-[1px]">
+          <div className="rounded-3xl bg-card p-8 sm:p-10 h-full">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-lavender/40 text-violet-deep mb-5">
+              <Target className="h-5 w-5" />
+            </div>
+            <h3 className="font-display text-2xl font-bold">Что будет результатом через 6 недель</h3>
+            <ul className="mt-6 space-y-4">
+              {results.map((item) => (
+                <li key={item} className="flex gap-3">
+                  <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-lavender/40 text-violet-deep">
+                    <Check className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="text-foreground/90 leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-16">
+        <h3 className="font-display text-2xl sm:text-3xl font-bold text-center">
+          Мы будем работать сразу на <span className="text-gradient">трех уровнях</span>
+        </h3>
+        <div className="mt-10 grid md:grid-cols-3 gap-6">
+          {levels.map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="group relative rounded-3xl bg-card border border-border/60 p-8 hover:-translate-y-1 transition-transform duration-300">
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-rose/0 to-lavender/0 group-hover:from-rose/10 group-hover:to-lavender/20 transition" />
+              <div className="relative">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-rose to-violet-deep text-white shadow-lg shadow-violet-deep/20">
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h4 className="mt-6 font-display text-xl font-bold">{title}</h4>
+                <p className="mt-3 text-muted-foreground leading-relaxed">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-12 text-center">
+        <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+          Это не просто обучение. Это пространство, где идея перестает быть мечтой и становится реальным проектом.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function Invitation() {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora" />
+      <div className="relative mx-auto max-w-4xl px-5 py-20">
+        <div className="rounded-[2rem] bg-gradient-to-br from-violet-deep to-rose p-[1px] shadow-2xl shadow-violet-deep/10">
+          <div className="rounded-[2rem] bg-card/95 backdrop-blur-xl p-8 sm:p-14 text-center">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-lavender/40 text-violet-deep mb-6">
+              <Lightbulb className="h-6 w-6" />
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold leading-tight">
+              Ищу 5 человек
+            </h2>
+            <p className="mt-5 text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              У которых есть идея проекта, блога, практики или продукта, но они не могут начать. Хочу провести пилотную группу и помочь пройти путь от идеи к первым действиям.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Button asChild size="lg" className="rounded-full bg-violet-deep hover:bg-violet-deep/90 text-white px-7 h-12 text-base shadow-lg shadow-violet-deep/20">
+                <a href="#cta">Хочу в пилотную группу <ArrowRight className="ml-2 h-4 w-4" /></a>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
