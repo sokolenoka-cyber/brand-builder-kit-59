@@ -65,6 +65,7 @@ function Landing() {
         <Marquee />
         <Problem />
         <Method />
+        <About />
         <Offer />
         <Process />
         <Testimonials />
@@ -381,6 +382,69 @@ function Testimonials() {
             </div>
           </figure>
         ))}
+      </div>
+
+      <div className="mt-10 grid sm:grid-cols-2 gap-6">
+        {[review1, review2].map((r, i) => (
+          <figure key={i} className="rounded-3xl bg-gradient-to-br from-lavender/40 to-rose/40 p-[1px] shadow-xl shadow-violet-deep/10">
+            <div className="rounded-3xl bg-card p-4 sm:p-6">
+              <img
+                src={r.url}
+                alt={`Скриншот отзыва клиента ${i + 1}`}
+                className="w-full h-auto rounded-2xl"
+                loading="lazy"
+              />
+              <figcaption className="mt-3 text-xs text-muted-foreground text-center">
+                Живой отзыв из Telegram
+              </figcaption>
+            </div>
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section id="about" className="mx-auto max-w-7xl px-5 py-24">
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative">
+          <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-lavender/40 via-rose/20 to-violet-deep/30 blur-2xl" />
+          <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl shadow-violet-deep/20">
+            <img
+              src={underwater.url}
+              alt="Глубина внутренней работы — портрет под водой"
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        </div>
+        <div>
+          <span className="text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold">Обо мне</span>
+          <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold leading-tight">
+            Я знаю, каково это — <span className="text-gradient">быть невидимкой</span> со своим даром
+          </h2>
+          <p className="mt-6 text-muted-foreground leading-relaxed">
+            Я провожу женщин и экспертов из «тихого знания, что я классная» — в проявленность, где про тебя
+            узнают, к тебе идут и платят. Совмещаю инструменты ИИ и глубинную работу с подсознанием —
+            потому что одно без другого не работает.
+          </p>
+          <ul className="mt-6 space-y-3 text-foreground/90">
+            {[
+              "7+ лет в теме личного бренда и проявленности",
+              "Сотни упакованных экспертов и предпринимателей",
+              "Авторский метод: ИИ × психика × миссия",
+            ].map((x) => (
+              <li key={x} className="flex gap-3">
+                <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-lavender/40 text-violet-deep">
+                  <Check className="h-3.5 w-3.5" />
+                </span>
+                {x}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
