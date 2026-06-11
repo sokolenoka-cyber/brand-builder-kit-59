@@ -945,10 +945,15 @@ function CTASection({
               >
                 {loading
                   ? "Отправляем..."
-                  : trigger
-                    ? (<>Разобрать мой триггер <Send className="ml-2 h-4 w-4" /></>)
-                    : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
+                  : submitError
+                    ? (<>Попробовать ещё раз <ArrowRight className="ml-2 h-4 w-4" /></>)
+                    : trigger
+                      ? (<>Разобрать мой триггер <Send className="ml-2 h-4 w-4" /></>)
+                      : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
               </Button>
+              {submitError && (
+                <p className="text-sm text-destructive text-center">{submitError}</p>
+              )}
               <p className="text-xs text-muted-foreground text-center">Нажимая кнопку, ты соглашаешься с обработкой персональных данных.</p>
             </form>
           </div>
