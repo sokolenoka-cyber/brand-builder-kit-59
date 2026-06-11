@@ -758,6 +758,38 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
+function submitForm({
+  name,
+  email,
+  msg,
+  trigger,
+}: {
+  name: string;
+  email: string;
+  msg: string;
+  trigger: (typeof TRIGGERS)[number] | null;
+}) {
+  const payload = {
+    name,
+    email,
+    msg,
+    trigger_key: trigger?.key ?? "",
+    trigger_label: trigger?.ready ?? "",
+    trigger_questions: trigger?.questions ?? [],
+  };
+  // TODO: заменить на реальный endpoint (Telegram, Email, Supabase и т.д.)
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      // Симуляция случайной ошибки сети (~10%)
+      if (Math.random() < 0.1) {
+        reject(new Error("Ошибка сети. Проверь соединение и попробуй снова."));
+      } else {
+        resolve();
+      }
+    }, 800);
+  });
+}
+
 function CTASection({
   selected,
   onClear,
@@ -766,6 +798,7 @@ function CTASection({
   onClear: () => void;
 }) {
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
@@ -839,21 +872,12 @@ function CTASection({
               </div>
             </div>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                const payload = {
-                  name,
-                  email,
-                  msg,
-                  trigger_key: trigger?.key ?? "",
-                  trigger_label: trigger?.ready ?? "",
-                  trigger_questions: trigger?.questions ?? [],
-                };
+                setSubmitError(null);
                 setLoading(true);
-                // eslint-disable-next-line no-console
-                console.log("[CTA submit]", payload);
-                setTimeout(() => {
-                  setLoading(false);
+                try {
+                  await submitForm({ name, email, msg, trigger });
                   toast.success(
                     trigger
                       ? `Заявка отправлена ✨ Разберём «${trigger.ready}» на встрече`
@@ -864,7 +888,13 @@ function CTASection({
                   setMsg("");
                   lastTriggerRef.current = null;
                   onClear();
-                }, 700);
+                } catch (err) {
+                  const message = err instanceof Error ? err.message : "Не удалось отправить. Попробуй ещё раз.";
+                  setSubmitError(message);
+                  toast.error(message);
+                } finally {
+                  setLoading(false);
+                }
               }}
               className="space-y-3"
             >
@@ -915,10 +945,15 @@ function CTASection({
               >
                 {loading
                   ? "Отправляем..."
-                  : trigger
-                    ? (<>Разобрать мой триггер <Send className="ml-2 h-4 w-4" /></>)
-                    : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
+                  : submitError
+                    ? (<>Попробовать ещё раз <ArrowRight className="ml-2 h-4 w-4" /></>)
+                    : trigger
+                      ? (<>Разобрать мой триггер <Send className="ml-2 h-4 w-4" /></>)
+                      : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
               </Button>
+              {submitError && (
+                <p className="text-sm text-destructive text-center">{submitError}</p>
+              )}
               <p className="text-xs text-muted-foreground text-center">Нажимая кнопку, ты соглашаешься с обработкой персональных данных.</p>
             </form>
           </div>
