@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Sparkles, Brain, Wand2, Compass, Heart, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail } from "lucide-react";
+import { Sparkles, Brain, Wand2, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import portrait from "@/assets/portrait.jpg.asset.json";
+import underwater from "@/assets/underwater.jpg.asset.json";
+import review1 from "@/assets/review1.png.asset.json";
+import review2 from "@/assets/review2.png.asset.json";
 
 const SITE = {
   brand: "Миссия на миллион",
