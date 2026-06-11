@@ -67,6 +67,7 @@ function Landing() {
         <Method />
         <About />
         <Offer />
+        <Invitation />
         <Process />
         <Testimonials />
         <FAQ />
