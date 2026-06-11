@@ -758,6 +758,38 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
+function submitForm({
+  name,
+  email,
+  msg,
+  trigger,
+}: {
+  name: string;
+  email: string;
+  msg: string;
+  trigger: (typeof TRIGGERS)[number] | null;
+}) {
+  const payload = {
+    name,
+    email,
+    msg,
+    trigger_key: trigger?.key ?? "",
+    trigger_label: trigger?.ready ?? "",
+    trigger_questions: trigger?.questions ?? [],
+  };
+  // TODO: заменить на реальный endpoint (Telegram, Email, Supabase и т.д.)
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      // Симуляция случайной ошибки сети (~10%)
+      if (Math.random() < 0.1) {
+        reject(new Error("Ошибка сети. Проверь соединение и попробуй снова."));
+      } else {
+        resolve();
+      }
+    }, 800);
+  });
+}
+
 function CTASection({
   selected,
   onClear,
