@@ -56,7 +56,112 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+export type TriggerKey =
+  | "visibility"
+  | "loud"
+  | "price"
+  | "launch"
+  | "real-self"
+  | "money"
+  | "perfectionism"
+  | "mission";
+
+export const TRIGGERS: {
+  key: TriggerKey;
+  ready: string;
+  trigger: string;
+  questions: string[];
+}[] = [
+  {
+    key: "visibility",
+    ready: "Готова проявляться",
+    trigger: "а вдруг скажут «куда ты лезешь, ты же ещё не дотянула»",
+    questions: [
+      "Где сейчас ты «прячешься»: блог, оффер, голос, цена?",
+      "Чей голос звучит в голове, когда ты хочешь показаться?",
+      "Что бы ты сделала на этой неделе, если бы точно знала, что не осудят?",
+    ],
+  },
+  {
+    key: "loud",
+    ready: "Готова заявить о себе громко",
+    trigger: "и тут же — «будут осуждать, потеряю своих»",
+    questions: [
+      "О чём именно ты хочешь заявить — какая тема просится наружу?",
+      "Кого ты боишься потерять, если станешь громче?",
+      "Какая аудитория должна тебя услышать вместо этой?",
+    ],
+  },
+  {
+    key: "price",
+    ready: "Готова брать высокий чек",
+    trigger: "но внутри — «я недостаточно, у других круче»",
+    questions: [
+      "Какой чек ты сейчас берёшь и какой хочешь?",
+      "С кем ты себя сравниваешь и обесцениваешься?",
+      "За какой результат клиента ты реально отвечаешь?",
+    ],
+  },
+  {
+    key: "launch",
+    ready: "Готова запустить свой проект",
+    trigger: "а в голове — «сначала ещё один курс, ещё один диплом»",
+    questions: [
+      "Что за проект ты хочешь запустить — опиши в одном предложении.",
+      "Каких знаний / регалий тебе якобы «не хватает»?",
+      "Что мешает стартовать с тем, что уже есть?",
+    ],
+  },
+  {
+    key: "real-self",
+    ready: "Готова показать настоящую себя",
+    trigger: "и сразу — «а что подумает мама / муж / подписчики»",
+    questions: [
+      "Какая «настоящая ты» сейчас спрятана?",
+      "Чьё мнение весит больше всего и почему?",
+      "Что изменится в твоём проекте, если ты перестанешь подстраиваться?",
+    ],
+  },
+  {
+    key: "money",
+    ready: "Готова к большим деньгам",
+    trigger: "но тело сжимается: «с деньгами приходит ответственность, я не вывезу»",
+    questions: [
+      "Какая сумма дохода тебя пугает / окрыляет?",
+      "Что для тебя «ответственность за большие деньги»?",
+      "Какой опыт с деньгами в роду / детстве сейчас всплывает?",
+    ],
+  },
+  {
+    key: "perfectionism",
+    ready: "Готова быть видимой",
+    trigger: "и тут — «лучше ещё подготовлюсь, дошлифую, потом»",
+    questions: [
+      "Что ты «дошлифовываешь» уже больше 3 месяцев?",
+      "Какой минимально достаточный шаг ты можешь сделать на этой неделе?",
+      "От чего тебя на самом деле защищает перфекционизм?",
+    ],
+  },
+  {
+    key: "mission",
+    ready: "Готова к своей миссии",
+    trigger: "а внутри страх: «а вдруг получится — и придётся менять всю жизнь»",
+    questions: [
+      "Как ты сейчас чувствуешь свою миссию — одной фразой.",
+      "Что в твоей жизни придётся пересобрать, если миссия раскроется?",
+      "Что для тебя «получилось» — как выглядит этот сценарий?",
+    ],
+  },
+];
+
 function Landing() {
+  const [selectedTrigger, setSelectedTrigger] = useState<TriggerKey | null>(null);
+  const handlePick = (key: TriggerKey) => {
+    setSelectedTrigger(key);
+    setTimeout(() => {
+      document.getElementById("cta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <Header />
@@ -64,7 +169,7 @@ function Landing() {
         <Hero />
         <Marquee />
         <Problem />
-        <Triggers />
+        <Triggers onPick={handlePick} selected={selectedTrigger} />
         <Method />
         <About />
         <Offer />
@@ -72,7 +177,7 @@ function Landing() {
         <Process />
         <Testimonials />
         <FAQ />
-        <CTASection />
+        <CTASection selected={selectedTrigger} onClear={() => setSelectedTrigger(null)} />
       </main>
       <Footer />
     </div>
