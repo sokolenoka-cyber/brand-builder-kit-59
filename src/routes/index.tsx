@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Sparkles, Brain, Wand2, Compass, Heart, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail } from "lucide-react";
+import { Sparkles, Brain, Wand2, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import portrait from "@/assets/portrait.jpg.asset.json";
+import underwater from "@/assets/underwater.jpg.asset.json";
+import review1 from "@/assets/review1.png.asset.json";
+import review2 from "@/assets/review2.png.asset.json";
 
 const SITE = {
   brand: "Миссия на миллион",
@@ -61,6 +65,7 @@ function Landing() {
         <Marquee />
         <Problem />
         <Method />
+        <About />
         <Offer />
         <Process />
         <Testimonials />
@@ -144,33 +149,35 @@ function Hero() {
         <div className="relative">
           <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-rose/30 via-lavender/40 to-violet-deep/20 blur-2xl" />
           <div className="relative grid grid-cols-6 gap-4">
-            <Card className="col-span-4 row-span-2 p-6 animate-float" style={{ animationDelay: "0.5s" }}>
-              <div className="flex items-center gap-2 text-xs text-violet-deep font-medium">
-                <Brain className="h-4 w-4" /> Подсознание
+            <div className="col-span-6 sm:col-span-4 row-span-2 relative rounded-3xl overflow-hidden shadow-2xl shadow-violet-deep/20 aspect-[3/4]">
+              <img
+                src={portrait.url}
+                alt="Автор программы «Миссия на миллион»"
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-violet-deep/70 via-violet-deep/10 to-transparent" />
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <p className="font-display text-xl leading-tight">Анна Прыткова</p>
+                <p className="text-xs opacity-80 mt-1">основатель «Миссия на миллион»</p>
               </div>
-              <p className="mt-3 font-display text-2xl leading-snug">
-                «Я готова быть видимой и брать деньги за свой дар.»
-              </p>
-              <div className="mt-5 h-1.5 rounded-full bg-muted overflow-hidden">
-                <div className="h-full w-[82%] bg-gradient-to-r from-rose to-violet-deep" />
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">Блок «синдром самозванца» — снят на 82%</p>
-            </Card>
-            <Card className="col-span-2 p-5">
+            </div>
+            <Card className="col-span-3 sm:col-span-2 p-5 animate-float" style={{ animationDelay: "0.5s" }}>
               <Wand2 className="h-5 w-5 text-violet-deep" />
               <p className="mt-3 font-display text-lg leading-tight">AI-страница за 1 день</p>
             </Card>
-            <Card className="col-span-2 p-5 bg-violet-deep text-white border-violet-deep">
+            <Card className="col-span-3 sm:col-span-2 p-5 bg-violet-deep text-white border-violet-deep">
               <Rocket className="h-5 w-5" />
               <p className="mt-3 font-display text-lg leading-tight">Готова проявляться</p>
             </Card>
-            <Card className="col-span-3 p-5">
-              <Heart className="h-5 w-5 text-rose" />
-              <p className="mt-2 text-sm text-muted-foreground">Миссия, тон, оффер — собраны в одно</p>
-            </Card>
-            <Card className="col-span-3 p-5 animate-float" style={{ animationDelay: "1.5s" }}>
-              <Compass className="h-5 w-5 text-violet-deep" />
-              <p className="mt-2 text-sm text-muted-foreground">Понятный путь клиента и продаж</p>
+            <Card className="col-span-6 p-5 animate-float" style={{ animationDelay: "1.5s" }}>
+              <div className="flex items-center gap-2 text-xs text-violet-deep font-medium">
+                <Brain className="h-4 w-4" /> Снят блок «синдром самозванца»
+              </div>
+              <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
+                <div className="h-full w-[82%] bg-gradient-to-r from-rose to-violet-deep" />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">«Я готова быть видимой и брать деньги за свой дар» — на 82%</p>
             </Card>
           </div>
         </div>
@@ -375,6 +382,69 @@ function Testimonials() {
             </div>
           </figure>
         ))}
+      </div>
+
+      <div className="mt-10 grid sm:grid-cols-2 gap-6">
+        {[review1, review2].map((r, i) => (
+          <figure key={i} className="rounded-3xl bg-gradient-to-br from-lavender/40 to-rose/40 p-[1px] shadow-xl shadow-violet-deep/10">
+            <div className="rounded-3xl bg-card p-4 sm:p-6">
+              <img
+                src={r.url}
+                alt={`Скриншот отзыва клиента ${i + 1}`}
+                className="w-full h-auto rounded-2xl"
+                loading="lazy"
+              />
+              <figcaption className="mt-3 text-xs text-muted-foreground text-center">
+                Живой отзыв из Telegram
+              </figcaption>
+            </div>
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section id="about" className="mx-auto max-w-7xl px-5 py-24">
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative">
+          <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-lavender/40 via-rose/20 to-violet-deep/30 blur-2xl" />
+          <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl shadow-violet-deep/20">
+            <img
+              src={underwater.url}
+              alt="Глубина внутренней работы — портрет под водой"
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        </div>
+        <div>
+          <span className="text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold">Обо мне</span>
+          <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold leading-tight">
+            Я знаю, каково это — <span className="text-gradient">быть невидимкой</span> со своим даром
+          </h2>
+          <p className="mt-6 text-muted-foreground leading-relaxed">
+            Я провожу женщин и экспертов из «тихого знания, что я классная» — в проявленность, где про тебя
+            узнают, к тебе идут и платят. Совмещаю инструменты ИИ и глубинную работу с подсознанием —
+            потому что одно без другого не работает.
+          </p>
+          <ul className="mt-6 space-y-3 text-foreground/90">
+            {[
+              "7+ лет в теме личного бренда и проявленности",
+              "Сотни упакованных экспертов и предпринимателей",
+              "Авторский метод: ИИ × психика × миссия",
+            ].map((x) => (
+              <li key={x} className="flex gap-3">
+                <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-lavender/40 text-violet-deep">
+                  <Check className="h-3.5 w-3.5" />
+                </span>
+                {x}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
