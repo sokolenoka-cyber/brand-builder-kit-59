@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Sparkles, Brain, Wand2, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail, Target, Lightbulb, Calendar, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -766,12 +766,28 @@ function CTASection({
   onClear: () => void;
 }) {
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState("");
+  const lastTriggerRef = useRef<TriggerKey | null>(null);
+
   const trigger = selected ? TRIGGERS.find((t) => t.key === selected) ?? null : null;
-  const prefill = trigger
-    ? `Мой триггер: «${trigger.ready} — НО ${trigger.trigger}».\n\nОтветы на вопросы:\n${trigger.questions
-        .map((q, i) => `${i + 1}. ${q}\n— `)
-        .join("\n")}`
-    : "";
+
+  const buildPrefill = (t: typeof trigger) =>
+    t
+      ? `Мой триггер: «${t.ready} — НО ${t.trigger}».\n\nОтветы на вопросы:\n${t.questions
+          .map((q, i) => `${i + 1}. ${q}\n— `)
+          .join("\n")}`
+      : "";
+
+  // Re-prefill the textarea when the user picks a new trigger,
+  // but don't wipe their custom text if the trigger hasn't changed.
+  useEffect(() => {
+    if (lastTriggerRef.current !== selected) {
+      lastTriggerRef.current = selected;
+      setMsg(buildPrefill(trigger));
+    }
+  }, [selected, trigger]);
   return (
     <section id="cta" className="relative overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 bg-aurora" />
@@ -823,25 +839,58 @@ function CTASection({
               </div>
             </div>
             <form
-              key={selected ?? "empty"}
               onSubmit={(e) => {
                 e.preventDefault();
+                const payload = {
+                  name,
+                  email,
+                  msg,
+                  trigger_key: trigger?.key ?? "",
+                  trigger_label: trigger?.ready ?? "",
+                  trigger_questions: trigger?.questions ?? [],
+                };
                 setLoading(true);
+                // eslint-disable-next-line no-console
+                console.log("[CTA submit]", payload);
                 setTimeout(() => {
                   setLoading(false);
-                  toast.success("Заявка отправлена ✨ Свяжусь с тобой в течение дня");
-                  (e.target as HTMLFormElement).reset();
+                  toast.success(
+                    trigger
+                      ? `Заявка отправлена ✨ Разберём «${trigger.ready}» на встрече`
+                      : "Заявка отправлена ✨ Свяжусь с тобой в течение дня",
+                  );
+                  setName("");
+                  setEmail("");
+                  setMsg("");
+                  lastTriggerRef.current = null;
+                  onClear();
                 }, 700);
               }}
               className="space-y-3"
             >
-              <input type="hidden" name="trigger_key" value={trigger?.key ?? ""} />
-              <input type="hidden" name="trigger_label" value={trigger?.ready ?? ""} />
-              <Input required name="name" placeholder="Имя" className="h-12 rounded-xl bg-background" />
-              <Input required type="email" name="email" placeholder="Email или телеграм" className="h-12 rounded-xl bg-background" />
+              <input type="hidden" name="trigger_key" value={trigger?.key ?? ""} readOnly />
+              <input type="hidden" name="trigger_label" value={trigger?.ready ?? ""} readOnly />
+              <Input
+                required
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Имя"
+                className="h-12 rounded-xl bg-background"
+              />
+              <Input
+                required
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email или телеграм"
+                className="h-12 rounded-xl bg-background"
+              />
               <Textarea
                 name="msg"
-                defaultValue={prefill}
+                value={msg}
+                onChange={(e) => setMsg(e.target.value)}
                 placeholder={
                   trigger
                     ? "Ответь коротко на 3 вопроса выше — даже одной строкой."
@@ -849,6 +898,15 @@ function CTASection({
                 }
                 className="rounded-xl bg-background min-h-44"
               />
+              {trigger && (
+                <button
+                  type="button"
+                  onClick={() => setMsg(buildPrefill(trigger))}
+                  className="text-xs text-violet-deep hover:underline underline-offset-4"
+                >
+                  ↻ Вернуть авто-вопросы по триггеру
+                </button>
+              )}
               <Button
                 type="submit"
                 disabled={loading}
