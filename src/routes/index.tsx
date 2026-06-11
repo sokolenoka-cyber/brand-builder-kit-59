@@ -766,12 +766,28 @@ function CTASection({
   onClear: () => void;
 }) {
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState("");
+  const lastTriggerRef = useRef<TriggerKey | null>(null);
+
   const trigger = selected ? TRIGGERS.find((t) => t.key === selected) ?? null : null;
-  const prefill = trigger
-    ? `Мой триггер: «${trigger.ready} — НО ${trigger.trigger}».\n\nОтветы на вопросы:\n${trigger.questions
-        .map((q, i) => `${i + 1}. ${q}\n— `)
-        .join("\n")}`
-    : "";
+
+  const buildPrefill = (t: typeof trigger) =>
+    t
+      ? `Мой триггер: «${t.ready} — НО ${t.trigger}».\n\nОтветы на вопросы:\n${t.questions
+          .map((q, i) => `${i + 1}. ${q}\n— `)
+          .join("\n")}`
+      : "";
+
+  // Re-prefill the textarea when the user picks a new trigger,
+  // but don't wipe their custom text if the trigger hasn't changed.
+  useEffect(() => {
+    if (lastTriggerRef.current !== selected) {
+      lastTriggerRef.current = selected;
+      setMsg(buildPrefill(trigger));
+    }
+  }, [selected, trigger]);
   return (
     <section id="cta" className="relative overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 bg-aurora" />
