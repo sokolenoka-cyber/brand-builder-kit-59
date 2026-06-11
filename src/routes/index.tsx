@@ -839,21 +839,12 @@ function CTASection({
               </div>
             </div>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                const payload = {
-                  name,
-                  email,
-                  msg,
-                  trigger_key: trigger?.key ?? "",
-                  trigger_label: trigger?.ready ?? "",
-                  trigger_questions: trigger?.questions ?? [],
-                };
+                setSubmitError(null);
                 setLoading(true);
-                // eslint-disable-next-line no-console
-                console.log("[CTA submit]", payload);
-                setTimeout(() => {
-                  setLoading(false);
+                try {
+                  await submitForm({ name, email, msg, trigger });
                   toast.success(
                     trigger
                       ? `Заявка отправлена ✨ Разберём «${trigger.ready}» на встрече`
@@ -864,7 +855,13 @@ function CTASection({
                   setMsg("");
                   lastTriggerRef.current = null;
                   onClear();
-                }, 700);
+                } catch (err) {
+                  const message = err instanceof Error ? err.message : "Не удалось отправить. Попробуй ещё раз.";
+                  setSubmitError(message);
+                  toast.error(message);
+                } finally {
+                  setLoading(false);
+                }
               }}
               className="space-y-3"
             >
