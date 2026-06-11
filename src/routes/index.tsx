@@ -758,10 +758,22 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-function CTASection() {
+function CTASection({
+  selected,
+  onClear,
+}: {
+  selected: TriggerKey | null;
+  onClear: () => void;
+}) {
   const [loading, setLoading] = useState(false);
+  const trigger = selected ? TRIGGERS.find((t) => t.key === selected) ?? null : null;
+  const prefill = trigger
+    ? `Мой триггер: «${trigger.ready} — НО ${trigger.trigger}».\n\nОтветы на вопросы:\n${trigger.questions
+        .map((q, i) => `${i + 1}. ${q}\n— `)
+        .join("\n")}`
+    : "";
   return (
-    <section id="cta" className="relative overflow-hidden">
+    <section id="cta" className="relative overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 bg-aurora" />
       <div className="relative mx-auto max-w-5xl px-5 py-24">
         <div className="rounded-[2rem] bg-card/80 backdrop-blur-xl border border-border/60 p-8 sm:p-14 shadow-2xl shadow-violet-deep/10">
@@ -769,17 +781,49 @@ function CTASection() {
             <div>
               <span className="text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold">Бесплатный разбор</span>
               <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold leading-tight">
-                Готова <span className="text-gradient">проявиться</span> по-настоящему?
+                {trigger ? (
+                  <>Разберём твоё <span className="text-gradient">«НО»</span> на встрече</>
+                ) : (
+                  <>Готова <span className="text-gradient">проявиться</span> по-настоящему?</>
+                )}
               </h2>
               <p className="mt-5 text-muted-foreground leading-relaxed">
-                Оставь заявку — за 30 минут разберём твою точку А, миссию и главный блок,
-                который мешает упаковке и деньгам.
+                {trigger
+                  ? `Ты выбрала триггер «${trigger.ready}». На разборе мы пройдём по 3 вопросам ниже и достанем точку, где ты себя останавливаешь.`
+                  : "Оставь заявку — за 30 минут разберём твою точку А, миссию и главный блок, который мешает упаковке и деньгам."}
               </p>
+              {trigger && (
+                <div className="mt-6 rounded-2xl border border-rose/40 bg-rose/5 p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-rose">Выбранный триггер</div>
+                      <p className="mt-1 font-display text-base font-semibold">{trigger.ready}</p>
+                      <p className="mt-1 text-sm italic text-foreground/70">НО {trigger.trigger}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onClear}
+                      className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-4 shrink-0"
+                    >
+                      сбросить
+                    </button>
+                  </div>
+                  <ul className="mt-4 space-y-2 text-sm text-foreground/80">
+                    {trigger.questions.map((q, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="text-rose font-bold">{i + 1}.</span>
+                        <span>{q}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 text-violet-deep" /> {SITE.email}
               </div>
             </div>
             <form
+              key={selected ?? "empty"}
               onSubmit={(e) => {
                 e.preventDefault();
                 setLoading(true);
@@ -791,16 +835,31 @@ function CTASection() {
               }}
               className="space-y-3"
             >
+              <input type="hidden" name="trigger_key" value={trigger?.key ?? ""} />
+              <input type="hidden" name="trigger_label" value={trigger?.ready ?? ""} />
               <Input required name="name" placeholder="Имя" className="h-12 rounded-xl bg-background" />
               <Input required type="email" name="email" placeholder="Email или телеграм" className="h-12 rounded-xl bg-background" />
-              <Textarea name="msg" placeholder="Коротко: чем занимаешься и что хочешь?" className="rounded-xl bg-background min-h-28" />
+              <Textarea
+                name="msg"
+                defaultValue={prefill}
+                placeholder={
+                  trigger
+                    ? "Ответь коротко на 3 вопроса выше — даже одной строкой."
+                    : "Коротко: чем занимаешься и что хочешь?"
+                }
+                className="rounded-xl bg-background min-h-44"
+              />
               <Button
                 type="submit"
                 disabled={loading}
                 size="lg"
                 className="w-full rounded-xl h-12 bg-violet-deep hover:bg-violet-deep/90 text-white text-base"
               >
-                {loading ? "Отправляем..." : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
+                {loading
+                  ? "Отправляем..."
+                  : trigger
+                    ? (<>Разобрать мой триггер <Send className="ml-2 h-4 w-4" /></>)
+                    : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
               </Button>
               <p className="text-xs text-muted-foreground text-center">Нажимая кнопку, ты соглашаешься с обработкой персональных данных.</p>
             </form>
