@@ -148,33 +148,35 @@ function Hero() {
         <div className="relative">
           <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-rose/30 via-lavender/40 to-violet-deep/20 blur-2xl" />
           <div className="relative grid grid-cols-6 gap-4">
-            <Card className="col-span-4 row-span-2 p-6 animate-float" style={{ animationDelay: "0.5s" }}>
-              <div className="flex items-center gap-2 text-xs text-violet-deep font-medium">
-                <Brain className="h-4 w-4" /> Подсознание
+            <div className="col-span-6 sm:col-span-4 row-span-2 relative rounded-3xl overflow-hidden shadow-2xl shadow-violet-deep/20 aspect-[3/4]">
+              <img
+                src={portrait.url}
+                alt="Автор программы «Миссия на миллион»"
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-violet-deep/70 via-violet-deep/10 to-transparent" />
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <p className="font-display text-xl leading-tight">Анна Прыткова</p>
+                <p className="text-xs opacity-80 mt-1">основатель «Миссия на миллион»</p>
               </div>
-              <p className="mt-3 font-display text-2xl leading-snug">
-                «Я готова быть видимой и брать деньги за свой дар.»
-              </p>
-              <div className="mt-5 h-1.5 rounded-full bg-muted overflow-hidden">
-                <div className="h-full w-[82%] bg-gradient-to-r from-rose to-violet-deep" />
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">Блок «синдром самозванца» — снят на 82%</p>
-            </Card>
-            <Card className="col-span-2 p-5">
+            </div>
+            <Card className="col-span-3 sm:col-span-2 p-5 animate-float" style={{ animationDelay: "0.5s" }}>
               <Wand2 className="h-5 w-5 text-violet-deep" />
               <p className="mt-3 font-display text-lg leading-tight">AI-страница за 1 день</p>
             </Card>
-            <Card className="col-span-2 p-5 bg-violet-deep text-white border-violet-deep">
+            <Card className="col-span-3 sm:col-span-2 p-5 bg-violet-deep text-white border-violet-deep">
               <Rocket className="h-5 w-5" />
               <p className="mt-3 font-display text-lg leading-tight">Готова проявляться</p>
             </Card>
-            <Card className="col-span-3 p-5">
-              <Heart className="h-5 w-5 text-rose" />
-              <p className="mt-2 text-sm text-muted-foreground">Миссия, тон, оффер — собраны в одно</p>
-            </Card>
-            <Card className="col-span-3 p-5 animate-float" style={{ animationDelay: "1.5s" }}>
-              <Compass className="h-5 w-5 text-violet-deep" />
-              <p className="mt-2 text-sm text-muted-foreground">Понятный путь клиента и продаж</p>
+            <Card className="col-span-6 p-5 animate-float" style={{ animationDelay: "1.5s" }}>
+              <div className="flex items-center gap-2 text-xs text-violet-deep font-medium">
+                <Brain className="h-4 w-4" /> Снят блок «синдром самозванца»
+              </div>
+              <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
+                <div className="h-full w-[82%] bg-gradient-to-r from-rose to-violet-deep" />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">«Я готова быть видимой и брать деньги за свой дар» — на 82%</p>
             </Card>
           </div>
         </div>
