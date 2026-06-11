@@ -153,5 +153,44 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
 }
+
+@utility text-gradient {
+  background: linear-gradient(120deg, var(--color-violet-deep), var(--color-lavender) 60%, var(--color-rose));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-aurora {
+  background:
+    radial-gradient(60% 50% at 20% 10%, color-mix(in oklab, var(--color-lavender) 55%, transparent), transparent 70%),
+    radial-gradient(50% 40% at 85% 20%, color-mix(in oklab, var(--color-rose) 60%, transparent), transparent 70%),
+    radial-gradient(45% 45% at 60% 95%, color-mix(in oklab, var(--color-violet-deep) 35%, transparent), transparent 70%),
+    var(--color-blush);
+}
+
+@utility glass {
+  background: color-mix(in oklab, white 65%, transparent);
+  backdrop-filter: blur(14px);
+  border: 1px solid color-mix(in oklab, white 70%, var(--color-lavender) 30%);
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-14px) rotate(2deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-float { animation: float-slow 7s ease-in-out infinite; }
+
