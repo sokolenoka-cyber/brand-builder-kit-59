@@ -56,7 +56,112 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+export type TriggerKey =
+  | "visibility"
+  | "loud"
+  | "price"
+  | "launch"
+  | "real-self"
+  | "money"
+  | "perfectionism"
+  | "mission";
+
+export const TRIGGERS: {
+  key: TriggerKey;
+  ready: string;
+  trigger: string;
+  questions: string[];
+}[] = [
+  {
+    key: "visibility",
+    ready: "Готова проявляться",
+    trigger: "а вдруг скажут «куда ты лезешь, ты же ещё не дотянула»",
+    questions: [
+      "Где сейчас ты «прячешься»: блог, оффер, голос, цена?",
+      "Чей голос звучит в голове, когда ты хочешь показаться?",
+      "Что бы ты сделала на этой неделе, если бы точно знала, что не осудят?",
+    ],
+  },
+  {
+    key: "loud",
+    ready: "Готова заявить о себе громко",
+    trigger: "и тут же — «будут осуждать, потеряю своих»",
+    questions: [
+      "О чём именно ты хочешь заявить — какая тема просится наружу?",
+      "Кого ты боишься потерять, если станешь громче?",
+      "Какая аудитория должна тебя услышать вместо этой?",
+    ],
+  },
+  {
+    key: "price",
+    ready: "Готова брать высокий чек",
+    trigger: "но внутри — «я недостаточно, у других круче»",
+    questions: [
+      "Какой чек ты сейчас берёшь и какой хочешь?",
+      "С кем ты себя сравниваешь и обесцениваешься?",
+      "За какой результат клиента ты реально отвечаешь?",
+    ],
+  },
+  {
+    key: "launch",
+    ready: "Готова запустить свой проект",
+    trigger: "а в голове — «сначала ещё один курс, ещё один диплом»",
+    questions: [
+      "Что за проект ты хочешь запустить — опиши в одном предложении.",
+      "Каких знаний / регалий тебе якобы «не хватает»?",
+      "Что мешает стартовать с тем, что уже есть?",
+    ],
+  },
+  {
+    key: "real-self",
+    ready: "Готова показать настоящую себя",
+    trigger: "и сразу — «а что подумает мама / муж / подписчики»",
+    questions: [
+      "Какая «настоящая ты» сейчас спрятана?",
+      "Чьё мнение весит больше всего и почему?",
+      "Что изменится в твоём проекте, если ты перестанешь подстраиваться?",
+    ],
+  },
+  {
+    key: "money",
+    ready: "Готова к большим деньгам",
+    trigger: "но тело сжимается: «с деньгами приходит ответственность, я не вывезу»",
+    questions: [
+      "Какая сумма дохода тебя пугает / окрыляет?",
+      "Что для тебя «ответственность за большие деньги»?",
+      "Какой опыт с деньгами в роду / детстве сейчас всплывает?",
+    ],
+  },
+  {
+    key: "perfectionism",
+    ready: "Готова быть видимой",
+    trigger: "и тут — «лучше ещё подготовлюсь, дошлифую, потом»",
+    questions: [
+      "Что ты «дошлифовываешь» уже больше 3 месяцев?",
+      "Какой минимально достаточный шаг ты можешь сделать на этой неделе?",
+      "От чего тебя на самом деле защищает перфекционизм?",
+    ],
+  },
+  {
+    key: "mission",
+    ready: "Готова к своей миссии",
+    trigger: "а внутри страх: «а вдруг получится — и придётся менять всю жизнь»",
+    questions: [
+      "Как ты сейчас чувствуешь свою миссию — одной фразой.",
+      "Что в твоей жизни придётся пересобрать, если миссия раскроется?",
+      "Что для тебя «получилось» — как выглядит этот сценарий?",
+    ],
+  },
+];
+
 function Landing() {
+  const [selectedTrigger, setSelectedTrigger] = useState<TriggerKey | null>(null);
+  const handlePick = (key: TriggerKey) => {
+    setSelectedTrigger(key);
+    setTimeout(() => {
+      document.getElementById("cta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <Header />
@@ -64,7 +169,7 @@ function Landing() {
         <Hero />
         <Marquee />
         <Problem />
-        <Triggers />
+        <Triggers onPick={handlePick} selected={selectedTrigger} />
         <Method />
         <About />
         <Offer />
@@ -72,7 +177,7 @@ function Landing() {
         <Process />
         <Testimonials />
         <FAQ />
-        <CTASection />
+        <CTASection selected={selectedTrigger} onClear={() => setSelectedTrigger(null)} />
       </main>
       <Footer />
     </div>
@@ -243,17 +348,13 @@ function Problem() {
   );
 }
 
-function Triggers() {
-  const pairs = [
-    { ready: "Готова проявляться", trigger: "а вдруг скажут «куда ты лезешь, ты же ещё не дотянула»" },
-    { ready: "Готова заявить о себе громко", trigger: "и тут же — «будут осуждать, потеряю своих»" },
-    { ready: "Готова брать высокий чек", trigger: "но внутри — «я недостаточно, у других круче»" },
-    { ready: "Готова запустить свой проект", trigger: "а в голове — «сначала ещё один курс, ещё один диплом»" },
-    { ready: "Готова показать настоящую себя", trigger: "и сразу — «а что подумает мама / муж / подписчики»" },
-    { ready: "Готова к большим деньгам", trigger: "но тело сжимается: «с деньгами приходит ответственность, я не вывезу»" },
-    { ready: "Готова быть видимой", trigger: "и тут — «лучше ещё подготовлюсь, дошлифую, потом»" },
-    { ready: "Готова к своей миссии", trigger: "а внутри страх: «а вдруг получится — и придётся менять всю жизнь»" },
-  ];
+function Triggers({
+  onPick,
+  selected,
+}: {
+  onPick: (key: TriggerKey) => void;
+  selected: TriggerKey | null;
+}) {
   return (
     <section className="mx-auto max-w-7xl px-5 py-24">
       <div className="max-w-3xl">
@@ -262,38 +363,57 @@ function Triggers() {
           «Готова… <span className="text-gradient">НО</span> — и тут триггер, который тормозит»
         </h2>
         <p className="mt-5 text-lg text-foreground/70 leading-relaxed">
-          Сила не там, где «надо больше пахать». Сила там, где ты замечаешь точное место,
-          в котором себя останавливаешь. Узнай свою фразу — и мы её разберём.
+          Выбери фразу, которая откликается больше всего — она поедет с тобой в форму заявки,
+          и мы разберём именно её на встрече.
         </p>
       </div>
       <div className="mt-12 grid md:grid-cols-2 gap-4">
-        {pairs.map((p) => (
-          <div
-            key={p.ready}
-            className="group rounded-2xl border border-border/60 bg-card p-6 hover:border-rose/60 hover:shadow-lg transition"
-          >
-            <div className="flex items-start gap-3">
-              <Check className="h-5 w-5 mt-1 text-violet-deep shrink-0" />
-              <p className="font-display text-lg font-semibold text-foreground">{p.ready}</p>
-            </div>
-            <div className="mt-3 ml-8 flex items-start gap-2">
-              <span className="text-rose font-bold text-sm tracking-widest">НО</span>
-              <p className="text-foreground/75 leading-relaxed italic">{p.trigger}</p>
-            </div>
-          </div>
-        ))}
+        {TRIGGERS.map((p) => {
+          const isActive = selected === p.key;
+          return (
+            <button
+              key={p.key}
+              type="button"
+              onClick={() => onPick(p.key)}
+              className={`group text-left rounded-2xl border bg-card p-6 transition hover:shadow-lg ${
+                isActive
+                  ? "border-rose ring-2 ring-rose/40 shadow-lg"
+                  : "border-border/60 hover:border-rose/60"
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <Check className={`h-5 w-5 mt-1 shrink-0 ${isActive ? "text-rose" : "text-violet-deep"}`} />
+                <p className="font-display text-lg font-semibold text-foreground">{p.ready}</p>
+              </div>
+              <div className="mt-3 ml-8 flex items-start gap-2">
+                <span className="text-rose font-bold text-sm tracking-widest">НО</span>
+                <p className="text-foreground/75 leading-relaxed italic">{p.trigger}</p>
+              </div>
+              <div className="mt-4 ml-8 text-xs font-semibold uppercase tracking-[0.2em] text-violet-deep/70">
+                {isActive ? "Выбрано → в форме заявки" : "Выбрать этот триггер →"}
+              </div>
+            </button>
+          );
+        })}
       </div>
       <div className="mt-10 rounded-3xl bg-aurora p-8 sm:p-10 text-center">
         <p className="font-display text-xl sm:text-2xl font-semibold max-w-3xl mx-auto leading-snug">
           То, что тебя останавливает — и есть точка, в которой рождается прорыв.
           На разборе мы достаём именно <span className="text-gradient">твоё «НО»</span> и переписываем его.
         </p>
-        <a
-          href="#cta"
+        <button
+          type="button"
+          onClick={() => {
+            const target = selected ?? TRIGGERS[0].key;
+            onPick(target);
+          }}
           className="mt-6 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 font-semibold hover:opacity-90 transition"
         >
-          Найти свой триггер <ArrowRight className="h-4 w-4" />
-        </a>
+          {selected
+            ? `Отправить «${TRIGGERS.find((t) => t.key === selected)?.ready}» в форму`
+            : "Найти свой триггер"}
+          <ArrowRight className="h-4 w-4" />
+        </button>
       </div>
     </section>
   );
@@ -638,10 +758,22 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-function CTASection() {
+function CTASection({
+  selected,
+  onClear,
+}: {
+  selected: TriggerKey | null;
+  onClear: () => void;
+}) {
   const [loading, setLoading] = useState(false);
+  const trigger = selected ? TRIGGERS.find((t) => t.key === selected) ?? null : null;
+  const prefill = trigger
+    ? `Мой триггер: «${trigger.ready} — НО ${trigger.trigger}».\n\nОтветы на вопросы:\n${trigger.questions
+        .map((q, i) => `${i + 1}. ${q}\n— `)
+        .join("\n")}`
+    : "";
   return (
-    <section id="cta" className="relative overflow-hidden">
+    <section id="cta" className="relative overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 bg-aurora" />
       <div className="relative mx-auto max-w-5xl px-5 py-24">
         <div className="rounded-[2rem] bg-card/80 backdrop-blur-xl border border-border/60 p-8 sm:p-14 shadow-2xl shadow-violet-deep/10">
@@ -649,17 +781,49 @@ function CTASection() {
             <div>
               <span className="text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold">Бесплатный разбор</span>
               <h2 className="mt-4 font-display text-4xl sm:text-5xl font-bold leading-tight">
-                Готова <span className="text-gradient">проявиться</span> по-настоящему?
+                {trigger ? (
+                  <>Разберём твоё <span className="text-gradient">«НО»</span> на встрече</>
+                ) : (
+                  <>Готова <span className="text-gradient">проявиться</span> по-настоящему?</>
+                )}
               </h2>
               <p className="mt-5 text-muted-foreground leading-relaxed">
-                Оставь заявку — за 30 минут разберём твою точку А, миссию и главный блок,
-                который мешает упаковке и деньгам.
+                {trigger
+                  ? `Ты выбрала триггер «${trigger.ready}». На разборе мы пройдём по 3 вопросам ниже и достанем точку, где ты себя останавливаешь.`
+                  : "Оставь заявку — за 30 минут разберём твою точку А, миссию и главный блок, который мешает упаковке и деньгам."}
               </p>
+              {trigger && (
+                <div className="mt-6 rounded-2xl border border-rose/40 bg-rose/5 p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-rose">Выбранный триггер</div>
+                      <p className="mt-1 font-display text-base font-semibold">{trigger.ready}</p>
+                      <p className="mt-1 text-sm italic text-foreground/70">НО {trigger.trigger}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onClear}
+                      className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-4 shrink-0"
+                    >
+                      сбросить
+                    </button>
+                  </div>
+                  <ul className="mt-4 space-y-2 text-sm text-foreground/80">
+                    {trigger.questions.map((q, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="text-rose font-bold">{i + 1}.</span>
+                        <span>{q}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 text-violet-deep" /> {SITE.email}
               </div>
             </div>
             <form
+              key={selected ?? "empty"}
               onSubmit={(e) => {
                 e.preventDefault();
                 setLoading(true);
@@ -671,16 +835,31 @@ function CTASection() {
               }}
               className="space-y-3"
             >
+              <input type="hidden" name="trigger_key" value={trigger?.key ?? ""} />
+              <input type="hidden" name="trigger_label" value={trigger?.ready ?? ""} />
               <Input required name="name" placeholder="Имя" className="h-12 rounded-xl bg-background" />
               <Input required type="email" name="email" placeholder="Email или телеграм" className="h-12 rounded-xl bg-background" />
-              <Textarea name="msg" placeholder="Коротко: чем занимаешься и что хочешь?" className="rounded-xl bg-background min-h-28" />
+              <Textarea
+                name="msg"
+                defaultValue={prefill}
+                placeholder={
+                  trigger
+                    ? "Ответь коротко на 3 вопроса выше — даже одной строкой."
+                    : "Коротко: чем занимаешься и что хочешь?"
+                }
+                className="rounded-xl bg-background min-h-44"
+              />
               <Button
                 type="submit"
                 disabled={loading}
                 size="lg"
                 className="w-full rounded-xl h-12 bg-violet-deep hover:bg-violet-deep/90 text-white text-base"
               >
-                {loading ? "Отправляем..." : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
+                {loading
+                  ? "Отправляем..."
+                  : trigger
+                    ? (<>Разобрать мой триггер <Send className="ml-2 h-4 w-4" /></>)
+                    : (<>Записаться на разбор <Send className="ml-2 h-4 w-4" /></>)}
               </Button>
               <p className="text-xs text-muted-foreground text-center">Нажимая кнопку, ты соглашаешься с обработкой персональных данных.</p>
             </form>
