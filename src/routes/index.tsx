@@ -64,6 +64,7 @@ function Landing() {
         <Hero />
         <Marquee />
         <Problem />
+        <Triggers />
         <Method />
         <About />
         <Offer />
