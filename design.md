@@ -1,204 +1,312 @@
-# Design System — текущее состояние
+# Design System — «Миссия на миллион»
 
-Документ фиксирует реально существующую визуальную систему проекта «Миссия на миллион».
-Ничего не придумано — только то, что уже есть в коде. Это база для дальнейшей работы.
-
----
-
-## 1. Технологическая основа
-
-- **Tailwind CSS v4** (`@import "tailwindcss"` в `src/styles.css`), CSS-first конфиг через `@theme inline`.
-- **shadcn/ui** — компоненты в `src/components/ui/*` (Button, Input, Textarea, Card, Sonner и др.).
-- **Шрифты** грузятся через `<link>` в `src/routes/__root.tsx` с Google Fonts: `Syne` (500–800), `Plus Jakarta Sans` (300–700).
-- **Иконки** — `lucide-react` (`Sparkles, Brain, Wand2, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail, Target, Lightbulb, Calendar, Users`).
-- **Toaster** — `sonner`, позиция `top-center`, `richColors`.
+Документ фиксирует **реально существующую** визуальную систему лендинга (источники: `src/styles.css`, `src/routes/__root.tsx`, `src/routes/index.tsx`, `src/components/ui/*`). Это правила, по которым уже сделан интерфейс — и которым должны следовать дальнейшие правки. Ничего не выдумано; всё, что требует решения, вынесено в §10 «Несоответствия».
 
 ---
 
-## 2. Цветовая палитра (oklch, `:root` в `src/styles.css`)
+## 0. Общее настроение и характер интерфейса
 
-### Семантические токены (shadcn)
-| Токен | Значение | Назначение |
+**Что транслирует интерфейс:**
+- Тёплая женская премиальность: розово-фиолетовая аура, кремовый off-white фон, мягкие radial-градиенты (`bg-aurora`), стеклянные поверхности (`glass`).
+- Авторский, кураторский тон: крупная дисплейная типографика `Syne` с отрицательным трекингом, ручные акценты градиентным текстом, спокойный ритм секций `py-24`.
+- Эмоциональная экспертность, а не «корпорат»: круглые pill-CTA, мягкие тени с фиолетовым подтоном, фотопортрет в hero вместо иллюстрации.
+- Доверие через воздух: много свободного пространства, узкие колонки текста (`max-w-3xl/4xl/5xl` в смысловых блоках).
+
+**Запрещено:**
+- Холодные синие/сине-серые палитры (включая дефолтную `.dark` тему shadcn — она в UI не активируется и считается dead code, см. §10.3).
+- Жёсткие прямоугольники без радиуса, индустриальные/брутальные приёмы, неоновые/кислотные акценты.
+- Хардкод цветов в классах (`text-white`, `bg-black`, `bg-[#...]`) — только семантические/брендовые токены.
+- Дополнительные шрифты-семейства помимо `Syne` (display) и `Plus Jakarta Sans` (body). Сериф запрещён.
+- Стоковые «AI-эстетика» решения: фиолетовые градиенты на белом по умолчанию, hero «как у всех». Любая новая секция должна попадать в текущую палитру и ритм.
+
+---
+
+## 1. Colors
+
+Все значения — `oklch`, объявлены в `:root` в `src/styles.css`. Тёмная тема `.dark` объявлена, но не используется (§10.3).
+
+### Поверхности и фон
+| Назначение | Токен / utility | Значение |
 |---|---|---|
-| `--background` | `oklch(0.985 0.008 340)` | фон страницы (тёплый off-white с розоватым) |
-| `--foreground` | `oklch(0.22 0.06 295)` | основной текст (тёмный фиолетово-баклажан) |
-| `--card` / `--popover` | `oklch(1 0 0)` | белые поверхности |
-| `--primary` | `oklch(0.52 0.16 300)` | насыщенный фиолетовый (= `--violet-deep`) |
-| `--secondary` | `oklch(0.93 0.04 340)` | светло-розовый |
-| `--muted` | `oklch(0.96 0.02 340)` | фон muted-блоков |
-| `--muted-foreground` | `oklch(0.48 0.06 300)` | приглушённый текст |
-| `--accent` | `oklch(0.78 0.10 310)` | сиренево-лавандовый |
-| `--destructive` | `oklch(0.6 0.22 27)` | алый, для ошибок |
-| `--border` | `oklch(0.9 0.03 320)` | тонкие границы |
-| `--input` | `oklch(0.93 0.03 320)` | бордеры инпутов |
-| `--ring` | `oklch(0.62 0.14 305)` | фокусное кольцо |
+| Основной фон страницы | `--background` / `bg-background` | `oklch(0.985 0.008 340)` — тёплый off-white с розоватым |
+| Карточки, поповеры | `--card`, `--popover` / `bg-card` | `oklch(1 0 0)` — чистый белый |
+| Muted-блоки | `--muted` / `bg-muted` | `oklch(0.96 0.02 340)` |
+| Secondary-поверхность | `--secondary` / `bg-secondary` | `oklch(0.93 0.04 340)` — светло-розовый |
+| Аура-фон секций | `@utility bg-aurora` | мульти-radial: `lavender + rose + violet-deep` на `blush` |
+| Стеклянная поверхность | `@utility glass` | `white 65%` + `blur(14px)` + бордер с лавандой |
 
-### Брендовые токены (кастом)
-| Токен | Значение | Tailwind utility |
+### Текст
+| Назначение | Токен | Значение |
 |---|---|---|
-| `--blush` | `oklch(0.95 0.025 350)` | `bg-blush`, `text-blush` |
-| `--rose` | `oklch(0.87 0.06 350)` | `bg-rose`, `text-rose` |
-| `--lavender` | `oklch(0.78 0.10 305)` | `bg-lavender`, `text-lavender` |
-| `--violet-deep` | `oklch(0.52 0.16 300)` | `bg-violet-deep`, `text-violet-deep` |
+| Основной текст | `--foreground` / `text-foreground` | `oklch(0.22 0.06 295)` — тёмный фиолетово-баклажан |
+| Второстепенный (lead, описания, ссылки) | `--muted-foreground` / `text-muted-foreground` | `oklch(0.48 0.06 300)` |
+| Текст на акценте | `--primary-foreground` | `oklch(0.99 0.01 340)` — почти белый |
+| Eyebrow / метка раздела | `text-violet-deep/70` | акцентный, полупрозрачный |
 
-Тёмная тема (`.dark`) объявлена, но **в интерфейсе нигде не активируется** (нет тоггла, `<html>` без класса). Палитра `.dark` — стандартная shadcn-голубоватая и **визуально не согласована** с брендовой розово-фиолетовой палитрой `:root` (см. §10).
+### Брендовые акценты
+| Токен | Значение | Где используется |
+|---|---|---|
+| `--blush` | `oklch(0.95 0.025 350)` | базовый розоватый фон, основа `bg-aurora` |
+| `--rose` | `oklch(0.87 0.06 350)` | hover-границы, выделение selected, нежные акценты |
+| `--lavender` | `oklch(0.78 0.10 305)` | hover-границы карточек, фон чипов (`bg-lavender/20`) |
+| `--violet-deep` | `oklch(0.52 0.16 300)` | **основной CTA-цвет**, заголовочные акценты, лого |
 
-### Дополнительно
-- `--chart-1…5`, `--sidebar-*` — стандартные shadcn, **в текущем UI не используются**.
+`--primary` равен `--violet-deep` (см. §10.4: один источник истины не выбран; в коде используется `bg-violet-deep`).
 
----
+### Семантика статусов
+| Статус | Источник | Правило |
+|---|---|---|
+| Success | `--violet-deep` + toast `sonner richColors` | отдельного зелёного нет; успех = брендовый violet + системный toast |
+| Warning | **не определён** | при необходимости — обсудить, добавить токен (см. §10.5) |
+| Error | `--destructive` `oklch(0.6 0.22 27)` (алый) | **только для текста ошибок и валидации форм** |
+| Selected / выделение | `border-rose` + `ring-2 ring-rose/40` | бренд-акцент, **не путать с error** |
 
-## 3. Типографика
-
-- **Display / заголовки**: `--font-display: "Syne"`. Класс `font-display` или любые `h1–h6` (через `@layer base` в `styles.css`). `letter-spacing: -0.02em`.
-- **Body**: `--font-sans: "Plus Jakarta Sans"`. Применён к `body`.
-
-### Реальная шкала (из `src/routes/index.tsx`)
-| Контекст | Классы |
-|---|---|
-| H1 (hero) | `font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.02]` |
-| H2 секций | `font-display text-4xl sm:text-5xl font-bold leading-tight` |
-| H3 карточек/блоков | `font-display text-2xl font-bold` (иногда `text-xl`, `text-3xl`) |
-| Lead-параграф hero | `text-lg text-muted-foreground leading-relaxed` |
-| Body | дефолт + `leading-relaxed` |
-| Метка раздела (eyebrow) | `text-xs uppercase tracking-[0.3em] text-violet-deep/70 font-semibold` |
-| Цифра в `<dt>` | `font-display text-2xl font-bold text-violet-deep` |
-| Капс в карточках процесса | `font-display text-5xl font-bold text-gradient` |
-
-### Текстовые эффекты
-- `@utility text-gradient` — `linear-gradient(120deg, violet-deep → lavender 60% → rose)`, используется на акцентных словах в H1/H2.
+### Правила контраста и акцента
+- На светлом `--background` и `bg-card` основной текст `--foreground` даёт контраст ≥ AA для body (≥ 4.5:1).
+- Акцент `--violet-deep` всегда сопровождается белым текстом (`text-white` допустим **только** в составе брендового CTA на violet-deep фоне — см. §4 Buttons).
+- На `bg-aurora` нельзя ставить `text-muted-foreground` без проверки — поверх градиента контраст падает; используем `text-foreground` или белый на тёмном CTA.
+- `text-gradient` (violet-deep → lavender → rose) применять **только к акцентным словам** в крупных заголовках (`text-4xl+`), никогда к body — у него нет фиксированного контраста.
+- Один акцентный цвет на блок: либо `violet-deep` (CTA), либо `rose` (selected/highlight). Не смешивать в одной интерактивной зоне.
 
 ---
 
-## 4. Лейаут и сетка
+## 2. Typography
 
-- **Контейнер**: `mx-auto max-w-7xl px-5` — единый паттерн для всех секций (Header, Hero, Problem, Triggers, Method, Offer, Process, Testimonials, Footer).
-- **Узкий контейнер** для CTA / FAQ / Invitation: `max-w-5xl` / `max-w-4xl` / `max-w-3xl`.
-- **Вертикальные отступы секций**: `py-24` (постоянно). Hero — `pt-16 pb-24 lg:pt-24 lg:pb-32`.
-- **Сетки**:
-  - Hero: `grid lg:grid-cols-2 gap-12 items-center`
-  - Карточки проблем/триггеров: `grid md:grid-cols-2 lg:grid-cols-3 gap-4` / `md:grid-cols-2 gap-4`
-  - Метод/уровни: `grid md:grid-cols-3 gap-6`
-  - Процесс: `grid md:grid-cols-2 lg:grid-cols-4 gap-5`
-- **Адаптивные брейкпоинты** используются `sm:`, `md:`, `lg:` — стандарт Tailwind.
+**Шрифты грузятся `<link>`-тегом в `src/routes/__root.tsx`** (Google Fonts):
+- **Display / заголовки**: `Syne` 500–800, токен `--font-display`, класс `font-display`, авто-применение к `h1–h6`. `letter-spacing: -0.02em`.
+- **Body**: `Plus Jakarta Sans` 300–700, токен `--font-sans`, применён к `body`.
 
----
+### Размерная шкала (реальная, из `src/routes/index.tsx`)
+| Уровень | Desktop | Mobile (без префиксов) | Начертание / трекинг | Line-height |
+|---|---|---|---|---|
+| H1 (hero) | `text-7xl` (`lg:`) → `text-6xl` (`sm:`) | `text-5xl` | `font-display font-bold`, `tracking -0.02em` | `leading-[1.02]` |
+| H2 секций | `text-5xl` (`sm:`) | `text-4xl` | `font-display font-bold` | `leading-tight` |
+| H3 карточек | `text-2xl` (иногда `text-xl`, `text-3xl` в крупных карточках) | то же | `font-display font-bold` | по умолчанию |
+| Lead-параграф | `text-lg` | `text-lg` | `font-sans`, `text-muted-foreground` | `leading-relaxed` |
+| Body | `text-base` (`text-sm` в плотных списках) | то же | `font-sans regular` | `leading-relaxed` |
+| Caption / подпись | `text-sm`, `text-xs` | то же | `font-sans`, обычно `text-muted-foreground` | по умолчанию |
+| Eyebrow (метка раздела) | `text-xs` | `text-xs` | `uppercase`, `tracking-[0.3em]`, `font-semibold`, `text-violet-deep/70` | — |
+| Цифра-маркер (`<dt>`) | `text-2xl` | `text-2xl` | `font-display font-bold text-violet-deep` | — |
+| Цифра процесса (1–4) | `text-5xl` | `text-5xl` | `font-display font-bold text-gradient` | — |
 
-## 5. Радиусы
-
-- Базовый `--radius: 1rem` → шкала `--radius-sm/md/lg/xl/2xl/3xl/4xl`.
-- В реальной разметке используется **в основном произвольно**:
-  - Кнопки: `rounded-full` (брендовые), `rounded-xl` (форма), `rounded-md` (shadcn-дефолт в `__root.tsx`).
-  - Карточки: `rounded-2xl`, `rounded-3xl`, `rounded-[2rem]`, `rounded-[2.5rem]`.
-  - Инпуты: `rounded-xl`.
-  - Иконочные «чипы»: `rounded-full`, `rounded-2xl`.
-- **Несоответствие**: одновременно встречаются `rounded-md` (404/error), `rounded-xl`, `rounded-2xl`, `rounded-3xl`, `rounded-[2rem]` — без чёткой системы (см. §10).
-
----
-
-## 6. Тени
-
-- Кастомная: `shadow-[0_8px_30px_-12px_rgba(155,114,207,0.25)]` (компонент `Card` внутри `index.tsx`).
-- Брендовые акценты: `shadow-lg shadow-violet-deep/20`, `shadow-2xl shadow-violet-deep/10`, `shadow-2xl shadow-violet-deep/20`, `shadow-xl shadow-violet-deep/10`.
-- Дефолтные shadcn: `shadow`, `shadow-sm` (Button variants).
+### Правила
+- Заголовки H1/H2 **всегда** `font-display` + `font-bold`. Никогда не использовать `Syne` для body.
+- Body **всегда** `Plus Jakarta Sans`. Никогда не миксовать с `Syne` в параграфах.
+- Адаптив: уменьшение через Tailwind-префиксы (`text-5xl sm:text-6xl lg:text-7xl`) — не вводим отдельные мобильные классы.
+- `letter-spacing: -0.02em` применяется автоматически ко всем h1–h6 — повторно `tracking-tight` не нужен.
+- Декоративный градиентный текст (`text-gradient`) — максимум 1–3 слова в заголовке, не для целых предложений.
 
 ---
 
-## 7. Кнопки
+## 3. Layout and spacing
 
-### shadcn Button (`src/components/ui/button.tsx`)
-- Variants: `default | destructive | outline | secondary | ghost | link`
-- Sizes: `default (h-9 px-4)`, `sm (h-8)`, `lg (h-10 px-8)`, `icon (h-9 w-9)`
-- Дефолтный радиус: `rounded-md`
-- Focus: `focus-visible:ring-1 focus-visible:ring-ring`
-- Disabled: `disabled:opacity-50 disabled:cursor-not-allowed`
+### Контейнеры
+- **Стандартный**: `mx-auto max-w-7xl px-5` — Header, Hero, Problem, Triggers, Method, Offer, Process, Testimonials, Footer.
+- **Узкий смысловой**: `max-w-5xl` (CTA), `max-w-4xl` (FAQ), `max-w-3xl` (Invitation, длинный нарратив).
+- Боковые отступы: `px-5` на всех брейкпоинтах (без увеличения на десктопе — это часть «спокойной» эстетики).
 
-### Реальные CTA в лендинге (переопределяют дефолты shadcn)
-- **Primary CTA**: `rounded-full bg-violet-deep hover:bg-violet-deep/90 text-white px-7 h-12 text-base shadow-lg shadow-violet-deep/20`
-- **Secondary outline**: `rounded-full h-12 px-7 border-violet-deep/30 text-violet-deep hover:bg-lavender/20`
-- **Хедер CTA**: `rounded-full bg-violet-deep hover:bg-violet-deep/90 text-white px-5`
-- **Submit формы**: `w-full rounded-xl h-12 bg-violet-deep hover:bg-violet-deep/90 text-white text-base`
-- **Тёмная кнопка в Triggers**: `rounded-full bg-foreground text-background px-6 py-3 font-semibold hover:opacity-90`
+### Сетка
+- Hero: `grid lg:grid-cols-2 gap-12 items-center` (на мобильном — один столбец).
+- Карточки-проблемы / триггеры: `grid md:grid-cols-2 lg:grid-cols-3 gap-4`.
+- Метод / уровни: `grid md:grid-cols-3 gap-6`.
+- Процесс: `grid md:grid-cols-2 lg:grid-cols-4 gap-5`.
+- Брейкпоинты — стандарт Tailwind (`sm 640`, `md 768`, `lg 1024`, `xl 1280`, `2xl 1536`).
 
-**Несоответствие**: брендовая кнопка живёт inline-классами поверх Button, а не как новый variant — её легко рассинхронизировать (см. §10).
+### Шкала отступов (фактическая)
+Используется подмножество дефолтной шкалы Tailwind, согласованное по ритму:
+- Внутри карточки: `p-6` (стандарт), `p-8` (крупные карточки Method / Levels).
+- Gap в сетках: `gap-4`, `gap-5`, `gap-6`, `gap-12` (hero).
+- Между заголовком и текстом в блоке: `mb-4` / `mb-6` / `mb-8`.
+
+### Вертикальный ритм между секциями
+- **Стандарт**: `py-24` для всех секций ниже Hero.
+- **Hero**: `pt-16 pb-24 lg:pt-24 lg:pb-32` (асимметрия — сверху воздуха меньше под sticky-хедер).
+- Между подсекциями внутри одной секции — `mt-12` / `mt-16`.
+- Не использовать `py-32+` или `py-12` для секций — выпадет из ритма.
 
 ---
 
-## 8. Карточки, формы, навигация
+## 4. Components
+
+### Кнопки
+Базовый компонент — `src/components/ui/button.tsx` (shadcn): варианты `default | destructive | outline | secondary | ghost | link`, размеры `default (h-9) | sm (h-8) | lg (h-10 px-8) | icon (h-9 w-9)`, дефолтный радиус `rounded-md`.
+
+**Брендовые CTA** (переопределяют дефолты shadcn inline — см. §10.2 о выносе в variant):
+
+| Роль | Классы | Где |
+|---|---|---|
+| Primary CTA | `rounded-full bg-violet-deep hover:bg-violet-deep/90 text-white px-7 h-12 text-base shadow-lg shadow-violet-deep/20` | Hero, секции, CTASection |
+| Secondary outline | `rounded-full h-12 px-7 border-violet-deep/30 text-violet-deep hover:bg-lavender/20` | Hero, secondary actions |
+| Header CTA | `rounded-full bg-violet-deep hover:bg-violet-deep/90 text-white px-5` | sticky header |
+| Inverted (на светлом аура-фоне) | `rounded-full bg-foreground text-background px-6 py-3 font-semibold hover:opacity-90` | Triggers CTA |
+| Submit формы | `w-full rounded-xl h-12 bg-violet-deep hover:bg-violet-deep/90 text-white text-base` | форма заявки |
+
+**Состояния:**
+- Hover: `hover:bg-violet-deep/90` (на брендовых), `hover:opacity-90` (на inverted), `hover:bg-lavender/20` (на outline).
+- Focus: дефолтный shadcn `focus-visible:ring-1 focus-visible:ring-ring` (`--ring` = брендовый violet); см. §10.6 — нужно усилить до `ring-2`.
+- Active: визуального override нет (используется браузерный + opacity при клике через `transition`).
+- Disabled: `disabled:opacity-50 disabled:pointer-events-none` (shadcn-дефолт) + `cursor-not-allowed` на форме.
+- Loading: текстовый swap внутри submit (например, «Отправляем…») + `disabled` атрибут — спиннер-иконки не используем.
 
 ### Карточки
-Несколько паттернов сосуществуют:
-1. Локальный `Card` (`index.tsx`): `rounded-2xl bg-card border border-border/60 shadow-[0_8px_30px_-12px_rgba(155,114,207,0.25)]`.
-2. Карточки проблем/триггеров/процесса: `rounded-2xl border border-border/60 bg-card p-6` + `hover:shadow-lg hover:border-lavender/60 transition` (или `hover:border-rose/60`).
-3. Карточки «Метод» и «3 уровня»: `rounded-3xl bg-card border border-border/60 p-8 hover:-translate-y-1 transition-transform`.
-4. «Градиентная рамка»: внешний `rounded-3xl bg-gradient-to-br from-violet-deep to-rose p-[1px]` + внутренний `rounded-3xl bg-card`.
-5. Стеклянный CTA-контейнер: `rounded-[2rem] bg-card/80 backdrop-blur-xl border border-border/60`.
+Сосуществуют 5 паттернов (см. §10.8 о дублировании `Card`):
+1. **Локальный `Card`** в `index.tsx`: `rounded-2xl bg-card border border-border/60 shadow-[0_8px_30px_-12px_rgba(155,114,207,0.25)]` — базовая.
+2. **Интерактивная карточка** (problems / triggers / process): `rounded-2xl border border-border/60 bg-card p-6 hover:shadow-lg hover:border-lavender/60 transition` (или `hover:border-rose/60`).
+3. **Крупная карточка** (Method, 3 уровня): `rounded-3xl bg-card border border-border/60 p-8 hover:-translate-y-1 transition-transform`.
+4. **Градиентная рамка**: внешний `rounded-3xl bg-gradient-to-br from-violet-deep to-rose p-[1px]` + внутренний `rounded-3xl bg-card`.
+5. **Стеклянный CTA-контейнер**: `rounded-[2rem] bg-card/80 backdrop-blur-xl border border-border/60`.
 
 ### Формы
-- `Input`: `h-12 rounded-xl bg-background` (переопределение shadcn).
+- `Input` (shadcn override): `h-12 rounded-xl bg-background`.
 - `Textarea`: `rounded-xl bg-background min-h-44`.
-- Selected-триггер: `border-rose/40 bg-rose/5`.
+- Выбранный триггер (визуальный selected): `border-rose ring-2 ring-rose/40 shadow-lg` (на карточке) + selected-стейт блока `border-rose/40 bg-rose/5`.
+- Error-сообщение под формой: `text-destructive text-sm`.
+- Submit-loading: текстовый swap + `disabled`.
 
-### Навигация (Header)
-- `sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/60`
-- Лого: `rounded-full bg-gradient-to-br from-rose to-violet-deep text-white`
-- Ссылки: `text-sm text-muted-foreground hover:text-foreground transition`
+### Навигация и ссылки
+- **Header**: `sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/60`.
+- **Лого**: иконочный круг `rounded-full bg-gradient-to-br from-rose to-violet-deep text-white`.
+- **Ссылки навигации**: `text-sm text-muted-foreground hover:text-foreground transition`.
+- **Текстовые ссылки в контенте**: тот же паттерн (`text-muted-foreground → hover:text-foreground`), либо `text-violet-deep underline-offset-4 hover:underline` для акцентных.
 
-### Footer
-- `border-t border-border/60 bg-background`, иконки: `h-9 w-9 rounded-full border border-border hover:bg-lavender/20`.
+### Badges / чипы
+- **Eyebrow-чип**: `inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-violet-deep font-semibold`.
+- **Иконочный чип в карточке**: `h-10 w-10 rounded-2xl bg-lavender/20 text-violet-deep grid place-items-center` (иконка lucide `h-5 w-5`).
+- **Footer-социальные**: `h-9 w-9 rounded-full border border-border hover:bg-lavender/20`.
+
+### Радиусы, границы, тени
+- **Радиусы** (фактическая шкала): `rounded-md` (shadcn-дефолт — только legacy), `rounded-xl` (формы, submit), `rounded-2xl` (карточки), `rounded-3xl` (крупные карточки), `rounded-[2rem]` / `rounded-[2.5rem]` (CTA-герои), `rounded-full` (CTA / pill / лого / соц-иконки). См. §10.1 — закрепить систему.
+- **Границы**: `border border-border/60` — стандарт всех карточек. Hover-граница: `hover:border-lavender/60` или `hover:border-rose/60`.
+- **Тени**:
+  - Карточка: `shadow-[0_8px_30px_-12px_rgba(155,114,207,0.25)]` (брендовая).
+  - CTA: `shadow-lg shadow-violet-deep/20`.
+  - Стеклянные CTA-блоки: `shadow-2xl shadow-violet-deep/10` / `shadow-2xl shadow-violet-deep/20`.
+  - Никаких серых/нейтральных теней — все тени с violet-deep подтоном.
+
+### Правила повторного использования
+- Любую новую кнопку добавлять **поверх существующих 5 ролей** — не плодить новые цветовые комбинации.
+- Любую новую карточку приводить к одному из 5 паттернов выше; если не подходит — обсудить расширение системы, а не локальный override.
+- Запрещено хардкодить цвет/шрифт/радиус мимо токенов и установленной шкалы.
+- Дублирующиеся блоки (CTA, заголовок секции, eyebrow-чип) — выносить в локальные компоненты внутри `index.tsx`, а не копировать разметку.
 
 ---
 
-## 9. Состояния, эффекты, медиа
-
-### Hover / Active / Focus
-- Hover-цвет ссылок: `hover:text-foreground transition`.
-- Hover карточек: `hover:shadow-lg`, `hover:-translate-y-1`, `hover:border-rose/60` / `hover:border-lavender/60`.
-- Active триггер: `border-rose ring-2 ring-rose/40 shadow-lg`.
-- Focus: только дефолтный shadcn `focus-visible:ring-1 focus-visible:ring-ring` — **нет кастомного focus-стиля под брендовый violet-deep/rose**.
-- Disabled: только дефолт shadcn (`opacity-50`).
-- Error: используется `text-destructive` под формой + красная `border-rose/40 bg-rose/5` для selected-блока (rose ≠ destructive, см. §10).
-
-### Анимации (`styles.css`)
-- `@keyframes float-slow` → `.animate-float` (7s ease-in-out infinite).
-- `@keyframes shimmer` → используется как `animate-[shimmer_30s_linear_infinite]` для бегущей строки (но keyframes двигают `background-position`, а в Marquee применяются к flex-ряду — анимация по сути **не работает**, лента статична; см. §10).
-- Tailwind transitions: `transition`, `transition-colors`, `transition-transform duration-300`.
-
-### Утилиты-фоны
-- `@utility bg-aurora` — мульти-radial-gradient (lavender + rose + violet-deep на blush). Используется в Hero, Triggers-CTA, Invitation, CTASection.
-- `@utility glass` — `bg color-mix(white 65%)` + `backdrop-filter blur(14px)` + бордер. Используется на чипе в Hero.
+## 5. Imagery and icons
 
 ### Изображения
-- Локальные ассеты: `portrait.jpg`, `underwater.jpg`, `review1.png`, `review2.png` (через `*.asset.json`, поле `.url`).
-- Hero portrait: `aspect-[3/4]`, `object-cover`, `loading="eager"`, поверх — градиент `from-violet-deep/70`.
-- About portrait: `aspect-[4/5]`, `loading="lazy"`.
-- Все `<img>` имеют осмысленный `alt`.
+- Источники: локальные ассеты `src/assets/*.asset.json` (поле `.url`): `portrait.jpg`, `underwater.jpg`, `review1.png`, `review2.png`.
+- **Стиль**: документальное фото-портретное, тёплая цветокоррекция с фиолетово-розовыми полутонами — согласовано с палитрой `bg-aurora`. Никаких 3D-рендеров, AI-аватарок, стоковых иллюстраций «людей в офисе».
+- **Кадрирование**:
+  - Hero portrait — `aspect-[3/4] object-cover`, `loading="eager"`, поверх — градиентный overlay `from-violet-deep/70` (тёмный угол под текст/кнопку).
+  - About portrait — `aspect-[4/5] object-cover`, `loading="lazy"`.
+  - Отзывы — квадратные/портретные аватары в карточках.
+- **Обработка**: тёплый тон, лёгкий контраст; overlay в hero — обязателен поверх фото для читаемости текста.
+- **Alt**: у всех `<img>` есть осмысленный `alt` — это часть стандарта, не опция.
+
+### Иконки
+- Источник: **только** `lucide-react`. В UI используются: `Sparkles, Brain, Wand2, Rocket, ArrowRight, Check, Quote, Instagram, Send, Mail, Target, Lightbulb, Calendar, Users`.
+- **Размеры**: `h-4 w-4` (внутри кнопок/чипов), `h-5 w-5` (стандарт в карточках), `h-6 w-6` (крупные акценты).
+- **Цвет**: наследуется от родителя (`text-violet-deep`, `text-foreground`, `text-muted-foreground`). Никогда не задавать иконке цвет, выпадающий из палитры.
+- **Стиль**: тонкие штрихи lucide (по умолчанию `stroke-width=2`) — не миксовать с filled-иконками других библиотек.
 
 ---
 
-## 10. Несоответствия и вопросы для обсуждения
+## 6. Motion
 
-Это то, что стоит решить **до** правок дизайна:
+### Характер и длительность
+- Анимации **спокойные, медленные, бесконечные** на декоре; **быстрые и едва заметные** на интерактиве. Никаких резких bounce/elastic.
+- `transition` / `transition-colors` — дефолтные ~150ms (Tailwind).
+- `transition-transform duration-300` — для hover-сдвигов карточек.
+- `animation: float-slow 7s ease-in-out infinite` — декоративный плавающий элемент в hero.
 
-1. **Радиусы.** Одновременно используются `rounded-md` (404/error/shadcn-дефолт), `rounded-xl` (формы/submit), `rounded-2xl` (карточки/локальный Card), `rounded-3xl` (Method), `rounded-[2rem]` / `rounded-[2.5rem]` (Invitation/CTA). Шкала `--radius-*` (sm…4xl) объявлена, но почти не используется. Зафиксировать систему: например, поля → `xl`, обычные карточки → `2xl`, крупные секционные блоки → `3xl`, диалоговые/CTA-«герои» → `[2rem]`. Решить, что делать с дефолтным `rounded-md` shadcn (Button) — оставить как есть или переопределить тему.
-2. **Кнопки.** Брендовый primary CTA (`rounded-full bg-violet-deep …`) копируется inline в 5+ местах. Стоит вынести как `variant: "brand"` в `buttonVariants`, чтобы избежать рассинхрона. Аналогично — `outline` бренд-вариант и `submit` (rounded-xl) форма.
-3. **Тёмная тема.** Палитра `.dark` в `styles.css` — стандартная shadcn (холодный сине-серый), несовместима с брендовыми `blush/rose/lavender/violet-deep`. Тёмный режим в UI не используется. Решить: убрать `.dark` блок, либо переписать его под бренд, либо оставить как dead code.
-4. **`primary` ≡ `violet-deep`.** Семантический `--primary` и брендовый `--violet-deep` имеют одно и то же значение `oklch(0.52 0.16 300)`. В коде всегда используется `bg-violet-deep` (никогда `bg-primary`). Стоит выбрать один источник истины — иначе при изменении бренда придётся править оба.
-5. **Состояния ошибок: `rose` vs `destructive`.** Для «выбранного триггера» используется `border-rose/40 bg-rose/5`, а текст ошибки формы — `text-destructive` (алый). Это два разных красных. Нужно решить: rose = брендовый акцент (всегда), destructive = строго ошибки.
-6. **Focus-кольцо.** `--ring` объявлен брендовым (`oklch(0.62 0.14 305)`), но shadcn ставит `ring-1` — почти невидимо на цветных фонах. Стоит усилить (`ring-2`) и проверить контраст на `bg-aurora`.
-7. **Marquee shimmer.** Класс `animate-[shimmer_30s_linear_infinite]` применён к flex-контейнеру, но `@keyframes shimmer` анимирует `background-position`. В результате бегущая строка не «бежит». Нужно решить: переписать keyframes под `transform: translateX` или убрать иллюзию анимации.
-8. **`Card` объявлен дважды.** В проекте есть `src/components/ui/card.tsx` (shadcn) и локальная функция `Card` внутри `src/routes/index.tsx` с другими стилями (тенью и радиусом). Это путает — стоит унифицировать.
-9. **OG-метаданные.** В корне (`__root.tsx`) лежит дефолтный `og:image` для «Lovable App», а в `index.tsx` метатеги перезаписывают только часть. Нужно решить, какой OG используется для лендинга (см. правило: og:image только на leaf-роутах).
-10. **Иконки в hero — несвязанные данные.** Карточка «Снят блок синдром самозванца — 82%» — статический декор. Это окей для лендинга, но стоит явно зафиксировать, что это **иллюстрация**, а не реальный прогресс пользователя.
+### Hover, переходы
+- Карточки: `hover:shadow-lg` + `hover:-translate-y-1` (на крупных) + `hover:border-lavender/60` / `hover:border-rose/60`.
+- Ссылки: только цветовой `transition` от `muted-foreground` к `foreground`.
+- Кнопки: только цветовой/opacity transition; **не двигаем** CTA по hover.
+
+### Появление при скролле
+- Сейчас **не используется** (ни IntersectionObserver, ни scroll-driven). Если добавлять — короткие fade/translate-up (≤ 400ms), один раз, через `prefers-reduced-motion` гард.
+
+### Reduced motion
+- Глобального CSS-правила `@media (prefers-reduced-motion: reduce)` **сейчас нет** — это пробел. При добавлении любой новой анимации обязательно оборачивать:
+  ```css
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float { animation: none; }
+  }
+  ```
+- `float-slow` и `shimmer` (§10.7 — не работает) тоже нужно заглушить под reduced-motion.
 
 ---
 
-## 11. Что я изучил
+## 7. Responsive and accessibility
 
-- `src/styles.css` — токены темы, фонты, утилиты `text-gradient`, `bg-aurora`, `glass`, keyframes.
-- `src/routes/__root.tsx` — root layout, шрифты, мета, NotFound и Error компоненты.
-- `src/routes/index.tsx` — весь лендинг (Header, Hero, Marquee, Problem, Triggers, Method, About, Offer, Invitation, Process, Testimonials, FAQ, CTASection, Footer + локальный `Card` + `submitForm`).
-- `src/components/ui/button.tsx` — варианты и размеры shadcn Button.
-- `src/components/ui/*` (Input, Textarea, Card, Sonner и др.) — стандартные shadcn, упомянуты по факту использования.
-- `src/assets/*.asset.json` — список используемых изображений.
-- `components.json`, `src/lib/utils.ts` — конфиг shadcn и `cn`-хелпер.
+### Breakpoints и перестроение
+- Используются стандартные Tailwind: `sm 640 / md 768 / lg 1024 / xl 1280`.
+- Hero: `lg` — двухколоночный, ниже — стек.
+- Сетки карточек: `md` — 2 колонки, `lg` — 3–4 колонки.
+- Header: одна горизонтальная линия на всех ширинах (нет мобильного бургера сейчас — ссылки скрыты на мобильном через `hidden md:flex`).
+- Шкала текста уменьшается через `text-5xl sm:text-6xl lg:text-7xl` — не вводим отдельные мобильные размеры.
+
+### Интерактивные элементы
+- **Минимальная высота — 44px** для всех тач-таргетов: кнопки `h-12` (48px) — выше минимума ✅. `Input` / `Textarea` — `h-12` / `min-h-44` ✅. Иконочные кнопки в социалках — `h-9 w-9` (36px) — **ниже 44px**, нужно поднять до `h-11 w-11` или добавить hit-area (см. §10).
+
+### Контраст
+- Цель — **WCAG AA минимум** (4.5:1 для body, 3:1 для крупного текста и UI-элементов).
+- `--foreground` на `--background` — проходит AA ✅.
+- `text-muted-foreground` на `--background` — на грани AA для body; **не использовать поверх `bg-aurora`** без проверки.
+- `text-white` на `bg-violet-deep` — проходит AA ✅ (CTA).
+- Любой новый цвет текста на цветном фоне — проверять через контраст-чекер до коммита.
+
+### Focus для клавиатуры
+- Базовый — shadcn `focus-visible:ring-1 focus-visible:ring-ring` (`--ring` = брендовый violet).
+- Видимость — слабая, особенно на `bg-aurora`. **Стандарт проекта**: усилить до `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background` для всех интерактивных элементов (см. §10.6).
+- Никогда не убирать `focus-visible` ради эстетики.
+
+### Запрет горизонтального скролла
+- `body` не должен иметь `overflow-x: hidden` как костыль — вместо этого:
+  - Все декоративные absolutely-позиционированные элементы (плавающие фигуры, аура) — внутри родителя с `relative overflow-hidden`.
+  - `bg-aurora` секции — `relative overflow-hidden`.
+  - Marquee / бегущая строка — `overflow-hidden` на контейнере, контент `whitespace-nowrap`.
+- Любая новая секция: проверять на мобильной ширине 320px, что нет горизонтального скролла.
+
+---
+
+## 8. Файлы, которые я изучил
+
+- `src/styles.css` — токены, шрифты, утилиты `text-gradient`, `bg-aurora`, `glass`, keyframes.
+- `src/routes/__root.tsx` — root layout, `<link>` шрифтов, мета, NotFound/Error.
+- `src/routes/index.tsx` — весь лендинг и локальный `Card` + `submitForm`.
+- `src/components/ui/button.tsx` — варианты и размеры.
+- `src/components/ui/{input,textarea,card,sonner,...}.tsx` — стандартные shadcn.
+- `src/assets/*.asset.json` — изображения.
+- `components.json`, `src/lib/utils.ts` — конфиг shadcn, `cn`-хелпер.
+
+---
+
+## 9. Какие правила я зафиксировал
+
+См. §0–7 выше. Ключевые:
+- Палитра — `oklch`, фон тёплый off-white, акцент `violet-deep`, hover-границы `lavender/rose`.
+- Шрифты — только `Syne` (display) + `Plus Jakarta Sans` (body).
+- Контейнер — `max-w-7xl px-5`, ритм секций — `py-24`.
+- Кнопки — 5 ролей, всегда rounded-full на CTA, `h-12`.
+- Карточки — 5 паттернов (см. §4); тени всегда с violet-подтоном.
+- Иконки — только `lucide-react`, наследуют цвет.
+- Тач-таргет ≥ 44px, контраст ≥ AA, focus всегда видимый, никаких horizontal scroll.
+
+---
+
+## 10. Несоответствия — обсудить до изменений
+
+1. **Радиусы.** Одновременно `rounded-md/xl/2xl/3xl/[2rem]/[2.5rem]/full` без единой системы. Шкала `--radius-*` в `@theme` объявлена, но почти не используется. Предложение: формы → `xl`, карточки → `2xl`, крупные карточки → `3xl`, CTA-«герои» → `[2rem]`, всё интерактивное pill → `full`. Убрать `rounded-md` (404/legacy).
+2. **Брендовые CTA inline.** Primary/secondary/inverted/submit копируются классами в 5+ местах. Вынести в `variant: "brand" | "brandOutline" | "inverted"` в `buttonVariants` + `size: "cta"` (`h-12 px-7`).
+3. **Тёмная тема `.dark`.** Стандартная shadcn-холодная палитра, несовместима с брендом, в UI не активна. Решить: удалить, переписать под бренд, или зафиксировать как dead-code с комментом.
+4. **`--primary` ≡ `--violet-deep`.** Два источника истины. В коде везде `bg-violet-deep`. Выбрать один: либо все CTA — `bg-primary`, либо удалить `--primary` как алиас и оставить только бренд-токен.
+5. **`rose` vs `destructive` для красного.** `border-rose` = selected/highlight, `text-destructive` = ошибки. Прямо зафиксировать в правиле и не мешать; добавить токен warning, если потребуется (сейчас нет).
+6. **Focus-кольцо.** `ring-1` едва заметно. Поднять до `ring-2` + `ring-offset-2 ring-offset-background` глобально, в т.ч. на цветных фонах.
+7. **`shimmer` keyframes не работают.** `@keyframes shimmer` анимирует `background-position`, но применён к flex-ряду Marquee. Переписать на `transform: translateX(-50%)` с дублированием контента, либо удалить иллюзию анимации.
+8. **`Card` объявлен дважды.** Есть `src/components/ui/card.tsx` (shadcn) и локальный `Card` в `index.tsx` с другой тенью/радиусом. Унифицировать (расширить shadcn-вариант или удалить локальный).
+9. **OG-метаданные.** В `__root.tsx` остаётся дефолтный `og:image` Lovable; в `index.tsx` мета частично перезаписаны. Зафиксировать leaf-level OG для лендинга (картинка, title, description).
+10. **Минимум 44px тач-таргет.** Соц-иконки в футере `h-9 w-9` (36px) — ниже минимума. Поднять до `h-11 w-11` или добавить невидимый hit-area.
+11. **Reduced motion.** Нет глобального гарда; `float-slow` всегда работает. Добавить `@media (prefers-reduced-motion: reduce)` блок.
+12. **Иллюстративные «данные» в hero** («Снят блок — 82%») — это декор, не пользовательский прогресс. Зафиксировать в комменте/копи, чтобы не путать с реальной метрикой.
