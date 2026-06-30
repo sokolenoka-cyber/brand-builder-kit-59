@@ -216,18 +216,16 @@ function Hero() {
         <div className="absolute top-40 right-0 h-96 w-96 rounded-full bg-lavender/40 blur-3xl animate-float" style={{ animationDelay: "2s" }} />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-5 pt-16 pb-24 lg:pt-24 lg:pb-32 grid lg:grid-cols-2 gap-12 items-center">
-        <div>
+      <div className="relative mx-auto max-w-7xl px-5 pt-16 pb-24 lg:pt-24 lg:pb-32 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="max-w-xl">
           <span className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium text-violet-deep">
-            <Sparkles className="h-3.5 w-3.5" /> ИИ × Подсознание × Миссия
+            <Sparkles className="h-3.5 w-3.5" /> ИИ + работа с блоками
           </span>
           <h1 className="mt-6 font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.02]">
-            Упакуй свою <span className="text-gradient">экспертность</span> через ИИ — и наконец проявись
+            Упакуй эксперта. <span className="text-gradient">Прояви</span> миссию.
           </h1>
-          <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
-            Соединяю мощь искусственного интеллекта и глубинную работу с подсознательными блоками.
-            Ты получаешь не «ещё один лендинг», а живую упаковку, в которой видно твою миссию —
-            и внутреннее «да» на то, чтобы её показать миру.
+          <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
+            Собираем визуал, оффер и позиционирование через нейросети — и снимаем внутренние тормоза, чтобы выйти в свет.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -235,57 +233,42 @@ function Hero() {
               <a href="#cta">{SITE.cta} <ArrowRight className="ml-2 h-4 w-4" /></a>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-full h-12 px-7 border-violet-deep/30 text-violet-deep hover:bg-lavender/20">
-              <a href="#method">Как это работает</a>
+              <a href="#offer">Смотреть программу</a>
             </Button>
           </div>
 
-          <dl className="mt-10 grid grid-cols-3 gap-6 max-w-md">
+          <div className="mt-10 flex flex-wrap gap-6 text-sm text-muted-foreground">
             {[
-              ["7 дней", "до новой упаковки"],
-              ["2 в 1", "ИИ + психика"],
-              ["1:1", "личное сопровождение"],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="font-display text-2xl font-bold text-violet-deep">{k}</dt>
-                <dd className="text-xs text-muted-foreground mt-1">{v}</dd>
-              </div>
+              "7 дней до новой упаковки",
+              "2 в 1: ИИ + психика",
+              "Сопровождение 1:1",
+            ].map((t) => (
+              <span key={t} className="inline-flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-violet-deep" />
+                {t}
+              </span>
             ))}
-          </dl>
+          </div>
         </div>
 
         <div className="relative">
-          <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-rose/30 via-lavender/40 to-violet-deep/20 blur-2xl" />
-          <div className="relative grid grid-cols-6 gap-4">
-            <div className="col-span-6 sm:col-span-4 row-span-2 relative rounded-3xl overflow-hidden shadow-2xl shadow-violet-deep/20 aspect-[3/4]">
-              <img
-                src={portrait.url}
-                alt="Автор программы «Миссия на миллион»"
-                className="absolute inset-0 h-full w-full object-cover"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-violet-deep/70 via-violet-deep/10 to-transparent" />
-              <div className="absolute bottom-5 left-5 right-5 text-white">
-                <p className="font-display text-xl leading-tight">Анна Прыткова</p>
-                <p className="text-xs opacity-80 mt-1">основатель «Миссия на миллион»</p>
-              </div>
+          <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-rose/20 via-lavender/30 to-violet-deep/10 blur-2xl" />
+          <div className="relative rounded-[2rem] overflow-hidden shadow-2xl shadow-violet-deep/10 aspect-[3/4]">
+            <img
+              src={portrait.url}
+              alt="Анна Прыткова — основатель «Миссия на миллион»"
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="eager"
+            />
+          </div>
+          <div className="mt-5 flex items-center gap-3">
+            <div className="h-12 w-12 rounded-full overflow-hidden border border-border/60">
+              <img src={portrait.url} alt="" className="h-full w-full object-cover" />
             </div>
-            <Card className="col-span-3 sm:col-span-2 p-5 animate-float" style={{ animationDelay: "0.5s" }}>
-              <Wand2 className="h-5 w-5 text-violet-deep" />
-              <p className="mt-3 font-display text-lg leading-tight">AI-страница за 1 день</p>
-            </Card>
-            <Card className="col-span-3 sm:col-span-2 p-5 bg-violet-deep text-white border-violet-deep">
-              <Rocket className="h-5 w-5" />
-              <p className="mt-3 font-display text-lg leading-tight">Готова проявляться</p>
-            </Card>
-            <Card className="col-span-6 p-5 animate-float" style={{ animationDelay: "1.5s" }}>
-              <div className="flex items-center gap-2 text-xs text-violet-deep font-medium">
-                <Brain className="h-4 w-4" /> Снят блок «синдром самозванца»
-              </div>
-              <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
-                <div className="h-full w-[82%] bg-gradient-to-r from-rose to-violet-deep" />
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">«Я готова быть видимой и брать деньги за свой дар» — на 82%</p>
-            </Card>
+            <div>
+              <p className="font-display text-base font-bold text-foreground">Анна Прыткова</p>
+              <p className="text-xs text-muted-foreground">Основатель «Миссия на миллион»</p>
+            </div>
           </div>
         </div>
       </div>
