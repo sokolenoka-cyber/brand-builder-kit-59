@@ -276,16 +276,6 @@ function Hero() {
   );
 }
 
-function Card({ children, className = "", style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
-  return (
-    <div
-      style={style}
-      className={`rounded-2xl bg-card border border-border/60 shadow-[0_8px_30px_-12px_rgba(155,114,207,0.25)] ${className}`}
-    >
-      {children}
-    </div>
-  );
-}
 
 function Marquee() {
   const items = ["AI-упаковка", "Личный бренд", "Снятие блоков", "Денежное мышление", "Миссия", "Проявленность", "ИИ-контент", "Голос эксперта"];
